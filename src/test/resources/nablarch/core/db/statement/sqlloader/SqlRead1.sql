@@ -1,0 +1,1 @@
+--SQL001 = 	select *	-- ここのコメントでは、SQL文の終端にはならない。	　from table	 where col1 = ?	   and col2 = ?       and col3 = '              '  -- このリテラルのスペースは削除されない。

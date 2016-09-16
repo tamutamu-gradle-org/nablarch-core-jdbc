@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration xmlns="http://tis.co.jp/nablarch/component-configuration"
+                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                         xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../../../../../main/resources/component-configuration.xsd">
+
+    <!-- db接続情報設定ファイル -->
+    <config-file file="db.config"/>
+    <import file="datasource.xml" />
+    <import file="db-default.xml" />
+
+    <!-- DbManagerの設定 -->
+    <component name="db-manager" class="nablarch.core.db.transaction.SimpleDbTransactionManager">
+        <property name="connectionFactory">
+            <component class="nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource">
+                <property name="dataSource" ref="dataSource" />
+                <property name="statementReuse" value="true"/>
+            </component>
+        </property>
+        <property name="transactionFactory">
+            <component class="nablarch.core.db.transaction.JdbcTransactionFactory">
+                <property name="isolationLevel" value="READ_COMMITTED"/>
+                <property name="initSqlList">
+                    <list>
+                        <value>delete from test_table2</value>
+                    </list>
+                </property>
+            </component>
+        </property>
+    </component>
+
+    <component name="fieldAnnotationCache" class="nablarch.core.cache.BasicStaticDataCache">
+        <property name="loader">
+          <component class="nablarch.core.db.statement.autoproperty.FieldAndAnnotationLoader"/>
+        </property>
+        <property name="loadOnStartup" value="false"/>
+    </component>
+
+    <component name="statementFactory"
+               class="nablarch.core.db.statement.BasicStatementFactory">
+        <property name="sqlStatementExceptionFactory" ref="dbExceptionFactory" />
+        <property name="fetchSize" value="500"/>
+        <property name="objectFieldCache" ref="fieldAnnotationCache" />
+        <property name="updatePreHookObjectHandlerList">
+            <list>
+                <component
+                        class="nablarch.core.db.statement.autoproperty.CurrentDateTimeAnnotationHandler">
+                    <property name="dateFormat" value="yyyyMMdd"/>
+                  <property name="fieldAnnotationCache" ref="fieldAnnotationCache" />
+                </component>
+                <component class="nablarch.core.db.statement.autoproperty.UserIdAnnotationHandler">
+                  <property name="fieldAnnotationCache" ref="fieldAnnotationCache" />
+                </component>
+            </list>
+        </property>
+        <property name="sqlParameterParserFactory">
+            <component class="nablarch.core.db.statement.BasicSqlParameterParserFactory"/>
+        </property>
+        <property name="sqlLoader">
+            <component class="nablarch.core.db.statement.BasicSqlLoader">
+                <property name="fileEncoding" value="utf-8"/>
+            </component>
+        </property>
+    </component>
+
+    <component name="initializer"
+               class="nablarch.core.repository.initialization.BasicApplicationInitializer">
+        <property name="initializeList">
+            <list>
+            </list>
+        </property>
+    </component>
+
+</component-configuration>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration xmlns="http://tis.co.jp/nablarch/component-configuration"
+                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                         xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../../../../../../../main/resources/component-configuration.xsd">
+
+  <import file="db-default.xml" />
+
+  <import file="nablarch/core/db/cache/InMemoryResultSetCacheTest.xml"/>
+  <config-file file="db.config"/>
+
+  <component name="statementFactory"
+             class="nablarch.core.db.cache.statement.CacheableStatementFactory">
+
+    <property name="sqlStatementExceptionFactory">
+      <component
+              class="nablarch.core.db.statement.exception.BasicSqlStatementExceptionFactory">
+      </component>
+    </property>
+    <property name="fetchSize" value="500"/>
+    <property name="updatePreHookObjectHandlerList"
+              ref="fieldAnnotationHandler" />
+    <property name="sqlParameterParserFactory">
+      <component class="nablarch.core.db.statement.BasicSqlParameterParserFactory"/>
+    </property>
+    <property name="sqlLoader">
+      <component class="nablarch.core.db.statement.BasicSqlLoader">
+        <property name="fileEncoding" value="utf-8"/>
+      </component>
+    </property>
+
+    <!-- 有効期限設定 -->
+    <property name="expirationSetting" ref="expirationSetting"/>
+    <!-- キャッシュ実装 -->
+    <property name="resultSetCache" ref="resultSetCache"/>
+  </component>
+
+
+  <component name="expirationSetting"
+             class="nablarch.core.cache.expirable.BasicExpirationSetting">
+    <property name="systemTimeProvider" ref="systemTimeProvider"/>
+    <property name="expiration">
+      <map>
+        <entry key="nablarch/core/db/cache/statement/CacheableStatementFactoryTest#TEST_NO_PARAM" value="1h"/>
+        <entry key="nablarch/core/db/cache/statement/CacheableStatementFactoryTest#TEST_WITH_PARAM" value="1h"/>
+        <entry key="nablarch/core/db/cache/statement/CacheableStatementFactoryTest#TEST_AUTO_PROP" value="1h"/>
+        <entry key="nablarch/core/db/cache/statement/CacheableStatementFactoryTest#TEST_VARIABLE" value="1h"/>
+        <entry key="nablarch/core/db/cache/statement/CacheableStatementFactoryTest#TEST_LIKE" value="1h"/>
+      </map>
+    </property>
+  </component>
+
+  <component name="systemTimeProvider" class="nablarch.util.FixedSystemTimeProvider">
+    <property name="fixedDate" value="20140101000000"/>
+  </component>
+
+  <!-- ユーザID設定ハンドラ -->
+  <component name="userIdAnnotationHandler"
+             class="nablarch.core.db.statement.autoproperty.UserIdAnnotationHandler">
+  </component>
+
+  <!-- リクエストID設定ハンドラ -->
+  <component name="requestIdAnnotationHandler"
+             class="nablarch.core.db.statement.autoproperty.RequestIdAnnotationHandler">
+  </component>
+
+
+  <!-- フィールドアノテーションハンドラの設定 -->
+  <list name="fieldAnnotationHandler">
+    <component-ref name="userIdAnnotationHandler" />
+    <component-ref name="requestIdAnnotationHandler" />
+  </list>
+
+  <!-- 初期化機能の設定 -->
+  <component name="initializer" class="nablarch.core.repository.initialization.BasicApplicationInitializer">
+    <property name="initializeList">
+      <list>
+      </list>
+    </property>
+  </component>
+</component-configuration>

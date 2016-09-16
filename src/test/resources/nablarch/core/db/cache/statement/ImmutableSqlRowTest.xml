@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../../../../../../../main/resources/component-configuration.xsd">
+
+  <import file="db-default.xml" />
+
+  <!-- ステートメントの設定 -->
+  <component name="statementFactory"
+      class="nablarch.core.db.cache.statement.CacheableStatementFactory">
+    <property name="fetchSize" value="50" />
+    <property name="queryTimeout" value="600" />
+    <property name="updatePreHookObjectHandlerList" ref="fieldAnnotationHandler" />
+    <property name="sqlParameterParserFactory">
+      <component class="nablarch.core.db.statement.BasicSqlParameterParserFactory" />
+    </property>
+    <property name="sqlStatementExceptionFactory" ref="dbExceptionFactory" />
+    <property name="sqlLoader" ref="sqlLoader" />
+
+    <property name="expirationSetting">
+      <component class="nablarch.core.cache.expirable.BasicExpirationSetting">
+        <property name="expirationList">
+          <list />
+        </property>
+        <property name="expiration">
+          <map>
+            <entry key="nablarch/core/db/cache/statement/MutableGuardingSqlRowTest#SELECT_TIMESTAMP" value="30min" />
+            <entry key="nablarch/core/db/cache/statement/MutableGuardingSqlRowTest#SELECT_BYTES" value="30min" />
+          </map>
+        </property>
+      </component>
+    </property>
+
+    <property name="resultSetCache">
+      <component class="nablarch.core.db.cache.InMemoryResultSetCache">
+        <property name="cacheSize" value="10" />
+      </component>
+    </property>
+  </component>
+
+  <component class="nablarch.util.FixedSystemTimeProvider">
+    <property name="fixedDate" value="20100101000000" />
+  </component>
+</component-configuration>

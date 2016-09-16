@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+	xmlns="http://tis.co.jp/nablarch/component-configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration /home/ssd/workspace/Nablarch/resources/component-configuration.xsd">
+
+
+    <import file="db-default.xml"/>
+
+	<!-- cashLoaderの定義 -->
+	<component name="exampleDataCache" class="nablarch.core.cache.BasicStaticDataCache">
+		<property name="loader">
+			<component class="nablarch.core.cache.example.ExampleDataLoader" />
+		</property>
+        <!-- 初期ロードを行う -->
+		<property name="loadOnStartup" value="true"/>
+	</component>
+
+	<!-- cacheを使用するコンポーネントの定義 -->
+	<component name="staticDataUseExample" class="nablarch.core.cache.example.StaticDataUseExample">
+		<property name="cache" ref="exampleDataCache" />
+	</component>
+
+	<component name="initializer" class="nablarch.core.repository.initialization.BasicApplicationInitializer">
+	    <property name="initializeList">
+	        <list>
+	            <!-- 他のコンポーネントは省略 -->
+	            <component-ref name="exampleDataCache"/>
+	        </list>
+	    </property>
+	</component>
+
+</component-configuration>

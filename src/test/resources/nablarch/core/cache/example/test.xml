@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration xmlns="http://tis.co.jp/nablarch/component-configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration /home/ssd/workspace/Nablarch/resources/component-configuration.xsd">
+
+    <!-- cashLoaderの定義 -->
+	<component name="cacheLoader" class="nablarch.core.core.cache.BasicCacheManager">
+		<property name="loader" ref="cacheLoader">
+			<component name="cacheLoader" class="test.CachedObjectCacheLoader"/>
+		</property>
+	</component>
+    <!-- cashLoaderを使用するコンポーネントの定義 -->
+	<component name="cacheLoader" class="test.CacheUseExample">
+		<property name="cacheManager" ref="cacheManager"/>
+	</component>
+	
+</component-configuration>

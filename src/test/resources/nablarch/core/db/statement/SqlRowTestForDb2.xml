@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../../../../../main/resources/component-configuration.xsd">
+
+  <config-file file="db.config" />
+
+  <!-- DbManagerの設定 -->
+  <component name="dbManager-default"
+      class="nablarch.core.db.transaction.SimpleDbTransactionManager" />
+  <component name="dbManager"
+      class="nablarch.core.db.transaction.SimpleDbTransactionManager">
+    <property name="dbTransactionName" value="generator" />
+  </component>
+  <component class="nablarch.core.db.transaction.JdbcTransactionFactory" />
+  <component
+      class="nablarch.core.db.statement.exception.BasicSqlStatementExceptionFactory" />
+  <component
+      class="nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource">
+    <property name="dataSource">
+      <component class="com.ibm.db2.jcc.DB2SimpleDataSource"
+                autowireType="ByName">
+              <property name="user" value="${db2.user}" />
+              <property name="password" value="${db2.password}" />
+              <property name="serverName" value="${db2.server-name}" />
+              <property name="portNumber" value="${db2.port-number}" />
+              <property name="databaseName" value="${db2.db-name}" />
+              <property name="driverType" value="4" />
+            </component>
+    </property>
+  </component>
+
+  <component name="statementFactory"
+      class="nablarch.core.db.statement.BasicStatementFactory">
+  </component>
+
+</component-configuration>

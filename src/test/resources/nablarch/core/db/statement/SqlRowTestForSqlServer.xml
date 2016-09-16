@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration
+    xmlns="http://tis.co.jp/nablarch/component-configuration"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../../../../../main/resources/component-configuration.xsd">
+
+  <config-file file="db.config" />
+
+  <!-- DbManagerの設定 -->
+  <component name="dbManager-default"
+      class="nablarch.core.db.transaction.SimpleDbTransactionManager" />
+  <component name="dbManager"
+      class="nablarch.core.db.transaction.SimpleDbTransactionManager">
+    <property name="dbTransactionName" value="generator" />
+  </component>
+  <component class="nablarch.core.db.transaction.JdbcTransactionFactory" />
+  <component
+      class="nablarch.core.db.statement.exception.BasicSqlStatementExceptionFactory" />
+  <component
+      class="nablarch.core.db.connection.BasicDbConnectionFactoryForDataSource">
+    <property name="dataSource" ref="dataSource" />
+  </component>
+
+  <component name="dataSource" class="com.microsoft.sqlserver.jdbc.SQLServerDataSource"
+      autowireType="ByName">
+    <property name="user" value="sa" />
+    <property name="password" value="SQLServer2008" />
+    <property name="serverName" value="192.168.160.123" />
+    <property name="portNumber" value="1433" />
+    <property name="databaseName" value="nablarch" />
+  </component>
+
+  <component name="statementFactory"
+      class="nablarch.core.db.statement.BasicStatementFactory">
+    <property name="resultSetConvertor">
+      <component class="nablarch.core.db.statement.SqlServerResultSetConvertor" />
+    </property>
+  </component>
+
+</component-configuration>

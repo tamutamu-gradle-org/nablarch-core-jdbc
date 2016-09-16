@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component-configuration xmlns="http://tis.co.jp/nablarch/component-configuration"
+                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                         xsi:schemaLocation="http://tis.co.jp/nablarch/component-configuration ../../../../../../../main/resources/component-configuration.xsd">
+
+  <component name="expirationSetting"
+             class="nablarch.core.cache.expirable.BasicExpirationSetting" >
+    <property name="systemTimeProvider" ref="systemTimeProvider"/>
+    <property name="expirationList">
+      <list>
+        <component-ref name="expireSettingSS11AA"/>
+        <component-ref name="expireSettingSS11BB"/>
+      </list>
+    </property>
+  </component>
+
+  <component name="systemTimeProvider" class="nablarch.util.FixedSystemTimeProvider">
+    <property name="fixedDate" value="20140101000000"/>
+  </component>
+
+  <map name="expireSettingSS11AA">
+    <entry key="please.change.me.tutorial.ss11AA.W11AA01Action#SELECT" value="100ms"/>  <!-- 100ミリ秒 -->
+    <entry key="please.change.me.tutorial.ss11AA.W11AA02Action#SELECT" value="30sec"/>  <!-- 30秒 -->
+    <entry key="please.change.me.tutorial.ss11AA.W11AA03Action#SELECT" value="10min"/>  <!-- 10分 -->
+    <entry key="please.change.me.tutorial.ss11AA.W11AA04Action#SELECT" value="1h"/>     <!-- 1時間 -->
+  </map>
+
+  <map name="expireSettingSS11BB">
+    <entry key="please.change.me.tutorial.ss11BB.W11BB01Action#SELECT" value="24h"/>  <!-- 24時間 -->
+  </map>
+
+
+</component-configuration>
