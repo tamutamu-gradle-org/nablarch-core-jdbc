@@ -38,7 +38,7 @@ configurations.all {
 }
 
 configurations {
-  testCompile.exclude module: 'hamcrest-core'
+  testCompile.exclude group:'*', module: 'hamcrest-core'
 }
 
 dependencies {
