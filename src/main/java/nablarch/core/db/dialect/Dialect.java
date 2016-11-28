@@ -2,6 +2,7 @@ package nablarch.core.db.dialect;
 
 import java.sql.SQLException;
 
+import nablarch.core.db.dialect.converter.AttributeConverter;
 import nablarch.core.db.statement.ResultSetConvertor;
 import nablarch.core.db.statement.SelectOption;
 import nablarch.core.util.annotation.Published;
@@ -95,5 +96,9 @@ public interface Dialect {
      * @return ping用のSQL文
      */
     String getPingSql();
+
+    <T, DB> DB convertToDatabase(final T value, final Class<DB> dbType);
+    
+    <T> T convertFromDatabase(Object value, Class<T> javaType);
 
 }

@@ -7,6 +7,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -155,6 +156,14 @@ public class DbUtilTest {
             assertThat(e.getMessage(),
                     is("specified position is out of range. actual size = [3], specified position = [-1]"));
         }
+    }
+
+    @Test
+    public void testTrimTime() throws Exception {
+        final Timestamp timestamp = Timestamp.valueOf("2016-12-03 01:02:03.123321");
+        assertThat(DbUtil.trimTime(timestamp)
+                         .getTimeInMillis(), is(Timestamp.valueOf("2016-12-03 00:00:00.0")
+                                                         .getTime()));
     }
 
     private static class StringCollection implements Collection<String> {
