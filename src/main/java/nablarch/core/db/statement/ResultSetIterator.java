@@ -13,6 +13,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import nablarch.core.db.DbAccessException;
+import nablarch.core.db.DbExecutionContext;
 import nablarch.core.util.annotation.Published;
 
 /**
@@ -65,6 +66,9 @@ public class ResultSetIterator implements Iterable<SqlRow> {
      */
     private ResultSetConvertor convertor;
 
+    /** 接続先データベースに関する情報 */
+    private final DbExecutionContext dbExecutionContext;
+
     /**
      * Iteratorの生成フラグ。<br>
      */
@@ -95,10 +99,12 @@ public class ResultSetIterator implements Iterable<SqlRow> {
      *
      * @param rs ResultSet
      * @param convertor ResultSetConvertor
+     * @param dbExecutionContext 接続先データベースに関する情報
      */
-    public ResultSetIterator(ResultSet rs, ResultSetConvertor convertor) {
+    public ResultSetIterator(ResultSet rs, ResultSetConvertor convertor, final DbExecutionContext dbExecutionContext) {
         this.rs = rs;
         this.convertor = convertor;
+        this.dbExecutionContext = dbExecutionContext;
 
         Map<String, Integer> tmpColTypeMap = new HashMap<String, Integer>();
         try {
@@ -361,7 +367,7 @@ public class ResultSetIterator implements Iterable<SqlRow> {
         } catch (SQLException e) {
             throw new DbAccessException("failed to getRow.", e);
         }
-        return new SqlRow(tmpRow, colTypeMap);
+        return new SqlRow(tmpRow, colTypeMap, dbExecutionContext.getDialect());
     }
 
     /**

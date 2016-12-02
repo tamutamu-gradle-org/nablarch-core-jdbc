@@ -1,9 +1,6 @@
 package nablarch.core.db.statement;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
@@ -27,8 +24,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import nablarch.core.db.DbAccessException;
+import nablarch.core.db.DbExecutionContext;
 import nablarch.core.db.connection.ConnectionFactory;
 import nablarch.core.db.connection.TransactionManagerConnection;
+import nablarch.core.db.dialect.DefaultDialect;
 import nablarch.core.transaction.TransactionContext;
 import nablarch.test.support.SystemRepositoryResource;
 import nablarch.test.support.db.helper.DatabaseTestRunner;
@@ -119,7 +118,7 @@ public class ResultSetIteratorTest {
             mockRs.next();
             result = new SQLException("next error");
         }};
-        final ResultSetIterator sut = new ResultSetIterator(mockRs, null);
+        final ResultSetIterator sut = new ResultSetIterator(mockRs, null, null);
         sut.next();
     }
 
@@ -164,7 +163,8 @@ public class ResultSetIteratorTest {
         final PreparedStatement statement = connection.getConnection().prepareStatement(
                 "SELECT * FROM RS_TEST ORDER BY CHAR_COL");
         final ResultSet rs = statement.executeQuery();
-        final ResultSetIterator sut = new ResultSetIterator(rs, new Convertor());
+        final ResultSetIterator sut = new ResultSetIterator(rs, new Convertor(),
+                new DbExecutionContext(connection, new DefaultDialect(), "default"));
 
         int index = 1;
         for (SqlRow row : sut) {
@@ -221,7 +221,7 @@ public class ResultSetIteratorTest {
             mockRs.next();
             result = new SQLException("error");
         }};
-        final ResultSetIterator sut = new ResultSetIterator(mockRs, null);
+        final ResultSetIterator sut = new ResultSetIterator(mockRs, null, null);
 
         sut.iterator();
     }
@@ -266,7 +266,8 @@ public class ResultSetIteratorTest {
         }};
         Iterator<SqlRow> iterator = null;
         try {
-            final ResultSetIterator sut = new ResultSetIterator(mockRs, null);
+            final ResultSetIterator sut = new ResultSetIterator(
+                    mockRs, null, new DbExecutionContext(connection, connection.getDialect(), "default"));
             iterator = sut.iterator();
         } catch (Exception e) {
             fail("ここは通らない");
@@ -287,7 +288,7 @@ public class ResultSetIteratorTest {
     }
 
     /**
-     * {@link ResultSetIterator#ResultSetIterator(ResultSet, ResultSetConvertor)}でSQLExceptionが発生するケース。
+     * {@link ResultSetIterator#ResultSetIterator(ResultSet, ResultSetConvertor, DbExecutionContext)}でSQLExceptionが発生するケース。
      *
      * DbAccessExceptionが送出されること。
      */
@@ -297,7 +298,7 @@ public class ResultSetIteratorTest {
             mockRs.getMetaData();
             result = new SQLException("getMetaData error");
         }};
-        new ResultSetIterator(mockRs, null);
+        new ResultSetIterator(mockRs, null, null);
     }
 
     /**
@@ -307,7 +308,7 @@ public class ResultSetIteratorTest {
      */
     @Test
     public void close(@Mocked final ResultSet mockRs) throws Exception {
-        final ResultSetIterator sut = new ResultSetIterator(mockRs, null);
+        final ResultSetIterator sut = new ResultSetIterator(mockRs, null, null);
         sut.close();
 
         new Verifications() {{
@@ -326,7 +327,7 @@ public class ResultSetIteratorTest {
             mockRs.close();
             result = new SQLException("close error");
         }};
-        final ResultSetIterator sut = new ResultSetIterator(mockRs, null);
+        final ResultSetIterator sut = new ResultSetIterator(mockRs, null, null);
         sut.close();
     }
 
@@ -370,7 +371,7 @@ public class ResultSetIteratorTest {
             result = new SQLException("getObject error");
         }};
 
-        final ResultSetIterator sut = new ResultSetIterator(mockRs, null);
+        final ResultSetIterator sut = new ResultSetIterator(mockRs, null, null);
         try {
             sut.getObject(2);
             fail("とおらないこと");
@@ -421,7 +422,7 @@ public class ResultSetIteratorTest {
             result = new SQLException("getString error");
         }};
 
-        final ResultSetIterator sut = new ResultSetIterator(mockRs, null);
+        final ResultSetIterator sut = new ResultSetIterator(mockRs, null, null);
         try {
             sut.getString(5);
             fail("とおらない");
@@ -596,7 +597,7 @@ public class ResultSetIteratorTest {
             result = new SQLException("getBigdecimal error");
         }};
 
-        final ResultSetIterator sut = new ResultSetIterator(mockRs, null);
+        final ResultSetIterator sut = new ResultSetIterator(mockRs, null, null);
 
         try {
             sut.getBigDecimal(9);
@@ -654,7 +655,7 @@ public class ResultSetIteratorTest {
             result = new SQLException("getDate error");
         }};
 
-        final ResultSetIterator sut = new ResultSetIterator(mockRs, null);
+        final ResultSetIterator sut = new ResultSetIterator(mockRs, null, null);
         try {
             sut.getDate(7);
             fail("とおらない");
@@ -703,7 +704,7 @@ public class ResultSetIteratorTest {
             result = new SQLException("getTimestamp error");
         }};
 
-        final ResultSetIterator sut = new ResultSetIterator(mockRs, null);
+        final ResultSetIterator sut = new ResultSetIterator(mockRs, null, null);
 
         try {
             sut.getTimestamp(6);
@@ -752,7 +753,7 @@ public class ResultSetIteratorTest {
             result = new SQLException("getBytes error");
         }};
 
-        final ResultSetIterator sut = new ResultSetIterator(mockRs, null);
+        final ResultSetIterator sut = new ResultSetIterator(mockRs, null, null);
 
         try {
             sut.getBytes(5);
@@ -807,7 +808,7 @@ public class ResultSetIteratorTest {
             result = new SQLException("getBlob error.");
         }};
 
-        final ResultSetIterator sut = new ResultSetIterator(mockRs, null);
+        final ResultSetIterator sut = new ResultSetIterator(mockRs, null, null);
 
         try {
             sut.getBlob(4);
