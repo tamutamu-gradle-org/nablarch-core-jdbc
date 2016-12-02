@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import nablarch.core.db.util.DbUtil;
 
 /**
- * {@link Integer}をデータベースとの間で入出力するために変換するクラス。
+ * {@link Timestamp}をデータベースとの間で入出力するために変換するクラス。
  *
  * @author siosio
  */
