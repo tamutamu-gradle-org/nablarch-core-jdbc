@@ -1,5 +1,7 @@
 package nablarch.core.db.dialect.converter;
 
+import nablarch.core.util.StringUtil;
+
 /**
  * {@link String}をデータベースとの間で入出力するために変換するクラス。
  *
@@ -18,6 +20,6 @@ public class StringAttributeConverter implements AttributeConverter<String> {
 
     @Override
     public String convertFromDatabase(final Object databaseAttribute) {
-        return databaseAttribute == null ? null : String.valueOf(databaseAttribute);
+        return databaseAttribute == null ? null : StringUtil.toString(databaseAttribute);
     }
 }

@@ -3,6 +3,8 @@ package nablarch.core.db.dialect.converter;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
+import java.math.BigDecimal;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.experimental.runners.Enclosed;
@@ -59,6 +61,11 @@ public class StringAttributeConverterTest {
         @Test
         public void fromInteger() throws Exception {
             assertThat(sut.convertFromDatabase(321), is("321"));
+        }
+        
+        @Test
+        public void convertFromBigDecimal() throws Exception {
+            assertThat(sut.convertFromDatabase(new BigDecimal("1.1")), is("1.1"));
         }
         
         @Test
