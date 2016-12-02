@@ -1,11 +1,14 @@
 package nablarch.core.db.dialect.converter;
 
+import nablarch.core.util.annotation.Published;
+
 /**
  * 属性値の変換を行うインタフェース。
  *
  * @author siosio
  * @param <T> 属性の型
  */
+@Published(tag = "architect")
 public interface AttributeConverter<T> {
 
     /**
