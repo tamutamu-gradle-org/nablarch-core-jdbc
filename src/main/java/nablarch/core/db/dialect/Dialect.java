@@ -2,7 +2,6 @@ package nablarch.core.db.dialect;
 
 import java.sql.SQLException;
 
-import nablarch.core.db.dialect.converter.AttributeConverter;
 import nablarch.core.db.statement.ResultSetConvertor;
 import nablarch.core.db.statement.SelectOption;
 import nablarch.core.util.annotation.Published;

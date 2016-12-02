@@ -2,7 +2,6 @@ package nablarch.core.db.dialect.converter;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.Calendar;
 
 import nablarch.core.db.util.DbUtil;
 

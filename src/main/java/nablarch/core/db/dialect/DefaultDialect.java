@@ -14,7 +14,6 @@ import nablarch.core.db.dialect.converter.BigDecimalAttributeConverter;
 import nablarch.core.db.dialect.converter.ByteArrayAttributeConverter;
 import nablarch.core.db.dialect.converter.IntegerAttributeConverter;
 import nablarch.core.db.dialect.converter.LongAttributeConverter;
-import nablarch.core.db.dialect.converter.OracleStringAttributeConverter;
 import nablarch.core.db.dialect.converter.ShortAttributeConverter;
 import nablarch.core.db.dialect.converter.SqlDateAttributeConverter;
 import nablarch.core.db.dialect.converter.StringAttributeConverter;
