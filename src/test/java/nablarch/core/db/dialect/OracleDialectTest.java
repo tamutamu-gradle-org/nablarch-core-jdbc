@@ -386,6 +386,7 @@ public class OracleDialectTest {
         assertThat("Timestamp", sut.convertToDatabase(Timestamp.valueOf("2016-12-02 11:22:33.123321"), java.sql.Date.class),
                 is(java.sql.Date.valueOf("2016-12-02")));
         assertThat("byte[]", sut.convertToDatabase(new byte[] {0x30, 0x39}, byte[].class), is(new byte[] {0x30, 0x39}));
+        assertThat("Boolean", sut.convertToDatabase(true, Boolean.class), is(Boolean.TRUE));
     }
 
     @Test
@@ -410,6 +411,9 @@ public class OracleDialectTest {
         assertThat("Timestamp", sut.convertFromDatabase("2016-12-03 01:02:03.123321", Timestamp.class),
                 is(Timestamp.valueOf("2016-12-03 01:02:03.123321")));
         assertThat("byte[]", sut.convertFromDatabase(new byte[] {0x00, 0x30}, byte[].class), is(new byte[] {0x00, 0x30}));
+        assertThat("Boolean", sut.convertFromDatabase("on", Boolean.class), is(Boolean.TRUE));
+        assertThat("boolean", sut.convertFromDatabase("off", boolean.class), is(false));
+        assertThat("null -> boolean", sut.convertFromDatabase(null, boolean.class), is(false));
     }
 }
 

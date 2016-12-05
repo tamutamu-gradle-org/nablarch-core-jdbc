@@ -11,6 +11,7 @@ import java.util.Map;
 
 import nablarch.core.db.dialect.converter.AttributeConverter;
 import nablarch.core.db.dialect.converter.BigDecimalAttributeConverter;
+import nablarch.core.db.dialect.converter.BooleanAttributeConverter;
 import nablarch.core.db.dialect.converter.ByteArrayAttributeConverter;
 import nablarch.core.db.dialect.converter.IntegerAttributeConverter;
 import nablarch.core.db.dialect.converter.LongAttributeConverter;
@@ -18,6 +19,7 @@ import nablarch.core.db.dialect.converter.ShortAttributeConverter;
 import nablarch.core.db.dialect.converter.SqlDateAttributeConverter;
 import nablarch.core.db.dialect.converter.StringAttributeConverter;
 import nablarch.core.db.dialect.converter.TimestampAttributeConverter;
+import nablarch.core.db.dialect.converter.UtilDateAttributeConverter;
 import nablarch.core.db.statement.ResultSetConvertor;
 import nablarch.core.db.statement.SelectOption;
 import nablarch.core.util.annotation.Published;
@@ -51,8 +53,11 @@ public class DefaultDialect implements Dialect {
         attributeConverterMap.put(long.class, new LongAttributeConverter.Primitive());
         attributeConverterMap.put(BigDecimal.class, new BigDecimalAttributeConverter());
         attributeConverterMap.put(java.sql.Date.class, new SqlDateAttributeConverter());
+        attributeConverterMap.put(java.util.Date.class, new UtilDateAttributeConverter());
         attributeConverterMap.put(Timestamp.class, new TimestampAttributeConverter());
         attributeConverterMap.put(byte[].class, new ByteArrayAttributeConverter());
+        attributeConverterMap.put(Boolean.class, new BooleanAttributeConverter());
+        attributeConverterMap.put(boolean.class, new BooleanAttributeConverter.Primitive());
         ATTRIBUTE_CONVERTER_MAP = Collections.unmodifiableMap(attributeConverterMap);
     }
 

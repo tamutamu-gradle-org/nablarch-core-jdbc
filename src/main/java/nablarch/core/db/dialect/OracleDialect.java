@@ -12,6 +12,7 @@ import java.util.Map;
 
 import nablarch.core.db.dialect.converter.AttributeConverter;
 import nablarch.core.db.dialect.converter.BigDecimalAttributeConverter;
+import nablarch.core.db.dialect.converter.BooleanAttributeConverter;
 import nablarch.core.db.dialect.converter.ByteArrayAttributeConverter;
 import nablarch.core.db.dialect.converter.IntegerAttributeConverter;
 import nablarch.core.db.dialect.converter.LongAttributeConverter;
@@ -57,6 +58,8 @@ public class OracleDialect extends DefaultDialect {
         attributeConverterMap.put(java.util.Date.class, new UtilDateAttributeConverter());
         attributeConverterMap.put(Timestamp.class, new TimestampAttributeConverter());
         attributeConverterMap.put(byte[].class, new ByteArrayAttributeConverter());
+        attributeConverterMap.put(Boolean.class, new BooleanAttributeConverter());
+        attributeConverterMap.put(boolean.class, new BooleanAttributeConverter.Primitive());
         ATTRIBUTE_CONVERTER_MAP = Collections.unmodifiableMap(attributeConverterMap);
     }
 
