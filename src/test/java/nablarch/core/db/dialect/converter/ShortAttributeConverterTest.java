@@ -101,6 +101,12 @@ public class ShortAttributeConverterTest {
 
             sut.convertFromDatabase(Timestamp.valueOf("2016-12-01 00:11:22.123321"));
         }
+
+        @Test
+        public void convertFromOverflowValue_shouldThrowException() throws Exception {
+            expectedException.expect(NumberFormatException.class);
+            sut.convertFromDatabase(Integer.MAX_VALUE);
+        }
     }
 
     public static class PrimitiveTest {

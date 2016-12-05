@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Date;
 
 import org.junit.Rule;
@@ -83,11 +84,17 @@ public class LongAttributeConverterTest {
         }
 
         @Test
-        public void convertFromSqlDate() throws Exception {
+        public void convertFromSqlDate_shouldThrowException() throws Exception {
             expectedException.expect(IllegalArgumentException.class);
             expectedException.expectMessage("unsupported data type:java.sql.Date, value:2016-12-01");
 
             sut.convertFromDatabase(Date.valueOf("2016-12-01"));
+        }
+        
+        @Test
+        public void convertFromOverflowValue_shouldThrowException() throws Exception {
+            expectedException.expect(NumberFormatException.class);
+            sut.convertFromDatabase(new BigInteger("9999999999999999999"));
         }
     }
     

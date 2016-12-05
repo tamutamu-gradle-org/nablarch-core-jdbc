@@ -36,7 +36,7 @@ public class ShortAttributeConverter implements AttributeConverter<Short> {
         } else if (databaseAttribute instanceof BigDecimal) {
             return ((BigDecimal) databaseAttribute).shortValueExact();
         } else if (databaseAttribute instanceof Number) {
-            return ((Number) databaseAttribute).shortValue();
+            return Short.valueOf(databaseAttribute.toString());
         } else if (databaseAttribute instanceof String) {
             return Short.valueOf((String) databaseAttribute);
         }

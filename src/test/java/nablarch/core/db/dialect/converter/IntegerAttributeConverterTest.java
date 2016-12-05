@@ -97,13 +97,17 @@ public class IntegerAttributeConverterTest {
         }
 
         @Test
-        public void convertFromByteArray() throws Exception {
+        public void convertFromByteArray_shouldThrowException() throws Exception {
             expectedException.expect(IllegalArgumentException.class);
             expectedException.expectMessage("unsupported data type:[B, value:");
             sut.convertFromDatabase(new byte[0]);
         }
-
-
+        
+        @Test
+        public void convertFromOverflowValue_shouldThrowException() throws Exception {
+            expectedException.expect(NumberFormatException.class);
+            sut.convertFromDatabase(Long.MAX_VALUE);
+        }
     }
 
     public static class PrimitiveTest {

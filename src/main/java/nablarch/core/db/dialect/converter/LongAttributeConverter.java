@@ -32,7 +32,7 @@ public class LongAttributeConverter implements AttributeConverter<Long> {
         } else if (databaseAttribute instanceof BigDecimal) {
             return ((BigDecimal) databaseAttribute).longValueExact();
         } else if (databaseAttribute instanceof Number) {
-            return ((Number) databaseAttribute).longValue();
+            return Long.valueOf(databaseAttribute.toString());
         } else if (databaseAttribute instanceof String) {
             return Long.valueOf((String) databaseAttribute);
         }

@@ -34,7 +34,7 @@ public class IntegerAttributeConverter implements AttributeConverter<Integer> {
         } else if (databaseAttribute instanceof BigDecimal) {
             return ((BigDecimal) databaseAttribute).intValueExact();
         } else if (databaseAttribute instanceof Number) {
-            return ((Number) databaseAttribute).intValue();
+            return Integer.valueOf(databaseAttribute.toString());
         } else if (databaseAttribute instanceof String) {
             return Integer.valueOf((String) databaseAttribute);
         }
