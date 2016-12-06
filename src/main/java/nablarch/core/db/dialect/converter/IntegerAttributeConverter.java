@@ -9,6 +9,19 @@ import java.math.BigDecimal;
  */
 public class IntegerAttributeConverter implements AttributeConverter<Integer> {
 
+    /**
+     * 以下の型への変換をサポートする。
+     *
+     * <ul>
+     *     <li>{@link Integer}</li>
+     *     <li>{@link BigDecimal}</li>
+     *     <li>{@link Long}</li>
+     *     <li>{@link String}</li>
+     * </ul>
+     *
+     * 上記に以外の型への変換はサポートしないため{@link IllegalArgumentException}を送出する。
+     * また、{@link null}もサポートしない。
+     */
     @SuppressWarnings("unchecked")
     @Override
     public <DB> DB convertToDatabase(final Integer javaAttribute, final Class<DB> databaseType) {
@@ -25,6 +38,17 @@ public class IntegerAttributeConverter implements AttributeConverter<Integer> {
                 + databaseType.getName());
     }
 
+    /**
+     * 以下の型からの変換をサポートする。
+     *
+     * <ul>
+     *     <li>{@link Number}</li>
+     *     <li>{@link String}</li>
+     * </ul>
+     *
+     * 上記に以外の型からの変換はサポートしないため{@link IllegalArgumentException}を送出する。
+     * なお、{@code null}は変換せずに{@code null}を返却する。
+     */
     @Override
     public Integer convertFromDatabase(final Object databaseAttribute) {
         if (databaseAttribute == null) {

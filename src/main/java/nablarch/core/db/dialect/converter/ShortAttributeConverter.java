@@ -9,6 +9,20 @@ import java.math.BigDecimal;
  */
 public class ShortAttributeConverter implements AttributeConverter<Short> {
 
+    /**
+     * 以下の型への変換をサポートする。
+     *
+     * <ul>
+     *     <li>{@link Short}</li>
+     *     <li>{@link Integer}</li>
+     *     <li>{@link Long}</li>
+     *     <li>{@link BigDecimal}</li>
+     *     <li>{@link String}</li>
+     * </ul>
+     *
+     * 上記に以外の型への変換はサポートしないため{@link IllegalArgumentException}を送出する。
+     * また、{@link null}もサポートしない。
+     */
     @SuppressWarnings("unchecked")
     @Override
     public <DB> DB convertToDatabase(final Short javaAttribute, final Class<DB> databaseType) {
@@ -27,6 +41,17 @@ public class ShortAttributeConverter implements AttributeConverter<Short> {
                 + databaseType.getName());
     }
 
+    /**
+     * 以下の型からの変換をサポートする。
+     *
+     * <ul>
+     *     <li>{@link Number}</li>
+     *     <li>{@link String}</li>
+     * </ul>
+     *
+     * 上記に以外の型からの変換はサポートしないため{@link IllegalArgumentException}を送出する。
+     * なお、{@code null}は変換せずに{@code null}を返却する。
+     */
     @Override
     public Short convertFromDatabase(final Object databaseAttribute) {
         if (databaseAttribute == null) {

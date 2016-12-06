@@ -12,6 +12,15 @@ import nablarch.core.db.DbAccessException;
  */
 public class ByteArrayAttributeConverter implements AttributeConverter<byte[]> {
 
+    /**
+     * 以下の型への変換をサポートする。
+     *
+     * <ul>
+     *     <li>byte[]</li>
+     * </ul>
+     *
+     * 上記に以外の型への変換はサポートしないため{@link IllegalArgumentException}を送出する。
+     */
     @Override
     public <DB> DB convertToDatabase(final byte[] javaAttribute, final Class<DB> databaseType) {
         if (databaseType.isAssignableFrom(byte[].class)) {
@@ -21,6 +30,17 @@ public class ByteArrayAttributeConverter implements AttributeConverter<byte[]> {
                 + databaseType.getName());
     }
 
+    /**
+     * 以下の型からの変換をサポートする。
+     *
+     * <ul>
+     *     <li>byte[]</li>
+     *     <li>{@link Blob}</li>
+     * </ul>
+     *
+     * 上記に以外の型からの変換はサポートしないため{@link IllegalArgumentException}を送出する。
+     * なお、{@code null}は変換せずに{@code null}を返却する。
+     */
     @Override
     public byte[] convertFromDatabase(final Object databaseAttribute) {
         if (databaseAttribute == null) {

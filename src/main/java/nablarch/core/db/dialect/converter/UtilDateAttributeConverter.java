@@ -12,6 +12,18 @@ import nablarch.core.db.util.DbUtil;
  */
 public class UtilDateAttributeConverter implements AttributeConverter<Date> {
 
+    /**
+     * 以下の型への変換をサポートする。
+     *
+     * <ul>
+     *     <li>{@link Timestamp}</li>
+     *     <li>{@link Date}</li>
+     *     <li>{@link String}</li>
+     * </ul>
+     *
+     * 上記に以外の型への変換はサポートしないため{@link IllegalArgumentException}を送出する。
+     * また、{@link null}もサポートしない。
+     */
     @SuppressWarnings("unchecked")
     @Override
     public <DB> DB convertToDatabase(final Date javaAttribute, final Class<DB> databaseType) {
@@ -25,6 +37,16 @@ public class UtilDateAttributeConverter implements AttributeConverter<Date> {
                 + databaseType.getName());
     }
 
+    /**
+     * 以下の型からの変換をサポートする。
+     *
+     * <ul>
+     *     <li>{@link Date}</li>
+     * </ul>
+     *
+     * 上記に以外の型からの変換はサポートしないため{@link IllegalArgumentException}を送出する。
+     * なお、{@code null}は変換せずに{@code null}を返却する。
+     */
     @Override
     public Date convertFromDatabase(final Object databaseAttribute) {
         if (databaseAttribute == null) {
