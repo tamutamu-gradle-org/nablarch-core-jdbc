@@ -26,6 +26,8 @@ import nablarch.core.beans.BeanUtil;
 import nablarch.core.db.DbAccessException;
 import nablarch.core.db.DbExecutionContext;
 import nablarch.core.db.connection.AppDbConnection;
+import nablarch.core.db.dialect.Dialect;
+import nablarch.core.db.dialect.converter.AttributeConverter;
 import nablarch.core.db.statement.ParameterHolder.NopParameterHolder;
 import nablarch.core.db.statement.ParameterHolder.ParamValue;
 import nablarch.core.db.statement.exception.SqlStatementException;
@@ -1082,6 +1084,7 @@ public class BasicSqlPStatement implements SqlPStatement, ParameterizedSqlPState
      * @throws SQLException データベースアクセス例外が発生した場合
      */
     private void setMap(Map<String, ?> map) throws SQLException {
+        final Dialect dialect = context.getDialect();
         for (int i = 0; i < namedParameterHolderList.size(); i++) {
             final NamedParameterHolder namedParameterHolder = namedParameterHolderList.get(i);
             if (!map.containsKey(namedParameterHolder.getParameterName())) {
@@ -1104,8 +1107,11 @@ public class BasicSqlPStatement implements SqlPStatement, ParameterizedSqlPState
                     value = DbUtil.getArrayValue(value, position);
                 }
             }
-            statement.setObject(i + 1, value);
-            paramHolder.add(namedParameterHolder.getParameterName(), value);
+
+            final Class<?> javaType = value == null ? null : value.getClass();
+            final Object dbValue = dialect.convertToDatabase(value, javaType);
+            statement.setObject(i + 1, dbValue);
+            paramHolder.add(namedParameterHolder.getParameterName(), dbValue);
         }
     }
 

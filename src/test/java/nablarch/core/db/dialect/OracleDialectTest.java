@@ -1,8 +1,7 @@
 package nablarch.core.db.dialect;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.text.IsEmptyString.isEmptyString;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
@@ -18,6 +17,7 @@ import java.util.Date;
 
 import nablarch.core.db.statement.ResultSetConvertor;
 import nablarch.core.db.statement.SelectOption;
+import nablarch.core.db.util.DbUtil;
 import nablarch.test.support.db.helper.DatabaseTestRunner;
 import nablarch.test.support.db.helper.DbTestRule;
 import nablarch.test.support.db.helper.TargetDb;
@@ -369,6 +369,51 @@ public class OracleDialectTest {
         final ResultSet rs = statement.executeQuery();
         assertThat(rs, is(notNullValue()));
         rs.close();
+    }
+
+    @Test
+    public void convertToDatabase() throws Exception {
+        assertThat("empty string->null", sut.convertToDatabase("", String.class), is(nullValue()));
+        assertThat("string", sut.convertToDatabase("あいうえお", String.class), is("あいうえお"));
+        assertThat("Short", sut.convertToDatabase(Short.valueOf("100"), BigDecimal.class), is(BigDecimal.valueOf(100)));
+        assertThat("Integer", sut.convertToDatabase(101, String.class), is("101"));
+        assertThat("Long", sut.convertToDatabase(102L, Long.class), is(102L));
+        assertThat("BigDecimal", sut.convertToDatabase(BigDecimal.ONE, Integer.class), is(1));
+        assertThat("java.sql.Date", sut.convertToDatabase(java.sql.Date.valueOf("2016-12-02"), Timestamp.class),
+                is(Timestamp.valueOf("2016-12-02 00:00:00.000000")));
+        assertThat("java.util.Date", sut.convertToDatabase(new java.util.Date(System.currentTimeMillis()), java.sql.Date.class),
+                is(new java.sql.Date(DbUtil.trimTime(new Date(System.currentTimeMillis())).getTimeInMillis())));
+        assertThat("Timestamp", sut.convertToDatabase(Timestamp.valueOf("2016-12-02 11:22:33.123321"), java.sql.Date.class),
+                is(java.sql.Date.valueOf("2016-12-02")));
+        assertThat("byte[]", sut.convertToDatabase(new byte[] {0x30, 0x39}, byte[].class), is(new byte[] {0x30, 0x39}));
+        assertThat("Boolean", sut.convertToDatabase(true, Boolean.class), is(Boolean.TRUE));
+    }
+
+    @Test
+    public void convertFromDatabase() throws Exception {
+        assertThat("String", sut.convertFromDatabase("あああ", String.class), is("あああ"));
+        assertThat("empty string", sut.convertFromDatabase("", String.class), is(isEmptyString()));
+        assertThat("Short", sut.convertFromDatabase(100, Short.class), is(Short.valueOf("100")));
+        assertThat("short", sut.convertFromDatabase(99, short.class), is((short) 99));
+        assertThat("null -> short", sut.convertFromDatabase(null, short.class), is(((short) 0)));
+        assertThat("Integer", sut.convertFromDatabase(101L, Integer.class), is(101));
+        assertThat("int", sut.convertFromDatabase("102", int.class), is(102));
+        assertThat("null -> int", sut.convertFromDatabase(null, int.class), is(0));
+        assertThat("Long", sut.convertFromDatabase("103", Long.class), is(103L));
+        assertThat("long", sut.convertFromDatabase(104, long.class), is(104L));
+        assertThat("null -> long", sut.convertFromDatabase(null, long.class), is(0L));
+        assertThat("BigDecimal", sut.convertFromDatabase("11.1", BigDecimal.class), is(new BigDecimal("11.1")));
+        assertThat("java.sql.Date", sut.convertFromDatabase(java.sql.Date.valueOf("2016-12-03"), java.sql.Date.class),
+                is(java.sql.Date.valueOf("2016-12-03")));
+        assertThat("java.util.Date", sut.convertFromDatabase(java.sql.Date.valueOf("2016-12-04"), Date.class), is(new Date(
+                java.sql.Date.valueOf("2016-12-04")
+                             .getTime())));
+        assertThat("Timestamp", sut.convertFromDatabase("2016-12-03 01:02:03.123321", Timestamp.class),
+                is(Timestamp.valueOf("2016-12-03 01:02:03.123321")));
+        assertThat("byte[]", sut.convertFromDatabase(new byte[] {0x00, 0x30}, byte[].class), is(new byte[] {0x00, 0x30}));
+        assertThat("Boolean", sut.convertFromDatabase("on", Boolean.class), is(Boolean.TRUE));
+        assertThat("boolean", sut.convertFromDatabase("off", boolean.class), is(false));
+        assertThat("null -> boolean", sut.convertFromDatabase(null, boolean.class), is(false));
     }
 }
 

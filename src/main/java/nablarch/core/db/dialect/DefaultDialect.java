@@ -1,9 +1,25 @@
 package nablarch.core.db.dialect;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
+import nablarch.core.db.dialect.converter.AttributeConverter;
+import nablarch.core.db.dialect.converter.BigDecimalAttributeConverter;
+import nablarch.core.db.dialect.converter.BooleanAttributeConverter;
+import nablarch.core.db.dialect.converter.ByteArrayAttributeConverter;
+import nablarch.core.db.dialect.converter.IntegerAttributeConverter;
+import nablarch.core.db.dialect.converter.LongAttributeConverter;
+import nablarch.core.db.dialect.converter.ShortAttributeConverter;
+import nablarch.core.db.dialect.converter.SqlDateAttributeConverter;
+import nablarch.core.db.dialect.converter.StringAttributeConverter;
+import nablarch.core.db.dialect.converter.TimestampAttributeConverter;
+import nablarch.core.db.dialect.converter.UtilDateAttributeConverter;
 import nablarch.core.db.statement.ResultSetConvertor;
 import nablarch.core.db.statement.SelectOption;
 import nablarch.core.util.annotation.Published;
@@ -20,6 +36,30 @@ public class DefaultDialect implements Dialect {
 
     /** {@link ResultSet}から値を取得するクラス */
     private static final ResultSetConvertor RESULT_SET_CONVERTOR = new DefaultResultSetConvertor();
+    
+    /**
+     * 型変換を行う{@link AttributeConverter}定義。
+     */
+    private static final Map<Class<?>, AttributeConverter<?>> ATTRIBUTE_CONVERTER_MAP;
+
+    static {
+        final Map<Class<?>, AttributeConverter<?>> attributeConverterMap = new HashMap<Class<?>, AttributeConverter<?>>();
+        attributeConverterMap.put(String.class, new StringAttributeConverter());
+        attributeConverterMap.put(Short.class, new ShortAttributeConverter());
+        attributeConverterMap.put(short.class, new ShortAttributeConverter.Primitive());
+        attributeConverterMap.put(Integer.class, new IntegerAttributeConverter());
+        attributeConverterMap.put(int.class, new IntegerAttributeConverter.Primitive());
+        attributeConverterMap.put(Long.class, new LongAttributeConverter());
+        attributeConverterMap.put(long.class, new LongAttributeConverter.Primitive());
+        attributeConverterMap.put(BigDecimal.class, new BigDecimalAttributeConverter());
+        attributeConverterMap.put(java.sql.Date.class, new SqlDateAttributeConverter());
+        attributeConverterMap.put(java.util.Date.class, new UtilDateAttributeConverter());
+        attributeConverterMap.put(Timestamp.class, new TimestampAttributeConverter());
+        attributeConverterMap.put(byte[].class, new ByteArrayAttributeConverter());
+        attributeConverterMap.put(Boolean.class, new BooleanAttributeConverter());
+        attributeConverterMap.put(boolean.class, new BooleanAttributeConverter.Primitive());
+        ATTRIBUTE_CONVERTER_MAP = Collections.unmodifiableMap(attributeConverterMap);
+    }
 
     /**
      * @return {@code false}を返す。
@@ -126,6 +166,34 @@ public class DefaultDialect implements Dialect {
         public boolean isConvertible(ResultSetMetaData rsmd, int columnIndex) throws SQLException {
             return true;
         }
+    }
+
+    @Override
+    public <T, DB> DB convertToDatabase(final T value, final Class<DB> dbType) {
+        if (value == null) {
+            return null;
+        }
+        @SuppressWarnings("unchecked")
+        final AttributeConverter<T> converter = getAttributeConverter((Class<T>) value.getClass());
+        return converter.convertToDatabase(value, dbType);
+    }
+
+    @Override
+    public <T> T convertFromDatabase(final Object value, final Class<T> javaType) {
+        final AttributeConverter<T> converter = getAttributeConverter(javaType);
+        return converter.convertFromDatabase(value);
+    }
+
+    /**
+     * 指定の型をデータベースの入出力で変換するためのコンバータを返す。
+     *
+     * @param javaType データベースへの入出力対象のクラス
+     * @param <T> データベースへの入出力対象の型
+     * @return 指定の型を変換するコンバータ
+     */
+    @SuppressWarnings("unchecked")
+    protected <T> AttributeConverter<T> getAttributeConverter(Class<T> javaType) {
+        return (AttributeConverter<T>) ATTRIBUTE_CONVERTER_MAP.get(javaType);
     }
 }
 

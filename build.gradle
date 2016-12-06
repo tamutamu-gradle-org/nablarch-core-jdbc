@@ -1,5 +1,5 @@
 group = 'com.nablarch.framework'
-version = '1.1.2'
+version = '1.2.0'
 description = 'JDBC依存部分(DBアクセス、UniversalDao)'
 
 

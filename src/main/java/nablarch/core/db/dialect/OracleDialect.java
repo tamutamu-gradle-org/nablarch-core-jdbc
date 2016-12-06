@@ -1,10 +1,26 @@
 package nablarch.core.db.dialect;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
+import nablarch.core.db.dialect.converter.AttributeConverter;
+import nablarch.core.db.dialect.converter.BigDecimalAttributeConverter;
+import nablarch.core.db.dialect.converter.BooleanAttributeConverter;
+import nablarch.core.db.dialect.converter.ByteArrayAttributeConverter;
+import nablarch.core.db.dialect.converter.IntegerAttributeConverter;
+import nablarch.core.db.dialect.converter.LongAttributeConverter;
+import nablarch.core.db.dialect.converter.OracleStringAttributeConverter;
+import nablarch.core.db.dialect.converter.ShortAttributeConverter;
+import nablarch.core.db.dialect.converter.SqlDateAttributeConverter;
+import nablarch.core.db.dialect.converter.TimestampAttributeConverter;
+import nablarch.core.db.dialect.converter.UtilDateAttributeConverter;
 import nablarch.core.db.statement.ResultSetConvertor;
 import nablarch.core.db.statement.SelectOption;
 import nablarch.core.util.annotation.Published;
@@ -22,6 +38,30 @@ public class OracleDialect extends DefaultDialect {
 
     /** 検索結果の値変換クラス */
     private static final OracleResultSetConvertor RESULT_SET_CONVERTOR = new OracleResultSetConvertor();
+    
+    /**
+     * 型変換を行う{@link AttributeConverter}定義。
+     */
+    private static final Map<Class<?>, AttributeConverter<?>> ATTRIBUTE_CONVERTER_MAP;
+    
+    static {
+        final Map<Class<?>, AttributeConverter<?>> attributeConverterMap = new HashMap<Class<?>, AttributeConverter<?>>();
+        attributeConverterMap.put(String.class, new OracleStringAttributeConverter());
+        attributeConverterMap.put(Short.class, new ShortAttributeConverter());
+        attributeConverterMap.put(short.class, new ShortAttributeConverter.Primitive());
+        attributeConverterMap.put(Integer.class, new IntegerAttributeConverter());
+        attributeConverterMap.put(int.class, new IntegerAttributeConverter.Primitive());
+        attributeConverterMap.put(Long.class, new LongAttributeConverter());
+        attributeConverterMap.put(long.class, new LongAttributeConverter.Primitive());
+        attributeConverterMap.put(BigDecimal.class, new BigDecimalAttributeConverter());
+        attributeConverterMap.put(java.sql.Date.class, new SqlDateAttributeConverter());
+        attributeConverterMap.put(java.util.Date.class, new UtilDateAttributeConverter());
+        attributeConverterMap.put(Timestamp.class, new TimestampAttributeConverter());
+        attributeConverterMap.put(byte[].class, new ByteArrayAttributeConverter());
+        attributeConverterMap.put(Boolean.class, new BooleanAttributeConverter());
+        attributeConverterMap.put(boolean.class, new BooleanAttributeConverter.Primitive());
+        ATTRIBUTE_CONVERTER_MAP = Collections.unmodifiableMap(attributeConverterMap);
+    }
 
     /**
      * {@inheritDoc}
@@ -184,5 +224,12 @@ public class OracleDialect extends DefaultDialect {
     @Override
     public String getPingSql() {
         return "select 1 from dual";
+    }
+
+
+    @SuppressWarnings("unchecked")
+    @Override
+    protected <T> AttributeConverter<T> getAttributeConverter(final Class<T> javaType) {
+        return (AttributeConverter<T>) ATTRIBUTE_CONVERTER_MAP.get(javaType);
     }
 }

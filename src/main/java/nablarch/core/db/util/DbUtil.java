@@ -1,7 +1,9 @@
 package nablarch.core.db.util;
 
 import java.lang.reflect.Array;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 
 /**
  * データベースアクセス機能で利用するユーティリティクラス。
@@ -101,5 +103,20 @@ public final class DbUtil {
         } else {
             return Array.get(object, pos);
         }
+    }
+
+    /**
+     * 日付の時間部分を取り除く。
+     * @param date 対象の日付
+     * @return 取り除いた結果
+     */
+    public static Calendar trimTime(Date date) {
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        return calendar;
     }
 }
