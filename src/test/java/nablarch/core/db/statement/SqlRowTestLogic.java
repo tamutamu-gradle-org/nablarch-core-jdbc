@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.sql.Time;
@@ -858,6 +859,66 @@ public abstract class SqlRowTestLogic {
         // ------------------------------------------------ assert
         final SqlRow sut = rs.get(0);
         sut.getBoolean("notFound");
+    }
+
+    @Test
+    public void getObject_String() throws Exception {
+        VariousDbTestHelper.setUpTable(SqlRowEntity.createDefaultValueInstance(1L));
+
+        final SqlPStatement statement = connection.prepareStatement("SELECT * FROM SQLROW_TEST");
+        SqlRow sut = statement.retrieve().get(0);
+        assertThat("Stringを指定して取得できる",
+                sut.getObject("varcharCol", String.class), is("あいうえおかきくけこ"));
+        assertThat("Stringを指定して取得できる",
+                sut.getObject("charCol", String.class), is("a"));
+    }
+
+    @Test
+    public void getObject_Integer() throws Exception {
+        VariousDbTestHelper.setUpTable(SqlRowEntity.createSetIntegerValueInstance(1L));
+
+        final SqlPStatement statement = connection.prepareStatement("SELECT * FROM SQLROW_TEST");
+        SqlRow sut = statement.retrieve().get(0);
+        assertThat("Integerを指定して取得できる",
+                sut.getObject("varcharCol", Integer.class), is(Integer.MAX_VALUE));
+        assertThat("Integerを指定して取得できる",
+                sut.getObject("integerCol", Integer.class), is(2));
+        assertThat("Integerを指定して取得できる",
+                sut.getObject("longCol", Integer.class), is(3));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getObject_columnNotFound() throws Exception {
+        VariousDbTestHelper.setUpTable(SqlRowEntity.createDefaultValueInstance(1L));
+        final SqlPStatement statement = connection.prepareStatement("SELECT * FROM SQLROW_TEST");
+        final SqlRow sut = statement.retrieve().get(0);
+
+        sut.getObject("notFound", String.class);
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void getObject_invalidType() throws Exception {
+        VariousDbTestHelper.setUpTable(SqlRowEntity.createDefaultValueInstance(1L));
+        final SqlPStatement statement = connection.prepareStatement("SELECT * FROM SQLROW_TEST");
+        final SqlRow sut = statement.retrieve().get(0);
+
+        sut.getObject("longCol", BigInteger.class);
+    }
+
+    @Test(expected = DbAccessException.class)
+    public void getObject_DbAccessException(@Mocked final Blob mockBlob) throws Exception {
+        VariousDbTestHelper.setUpTable(SqlRowEntity.createDefaultValueInstance(1L));
+
+        final SqlPStatement statement = connection.prepareStatement("SELECT * FROM SQLROW_TEST");
+        final SqlRow sut = statement.retrieve().get(0);
+
+        new Expectations(sut) {{
+            invoke(sut, "getObject", "binaryCol");
+            result = mockBlob;
+            mockBlob.length();
+            result = new SQLException("blob access error");
+        }};
+        sut.getObject("binaryCol", byte[].class);
     }
 
     /**
