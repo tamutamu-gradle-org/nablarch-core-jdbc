@@ -27,7 +27,6 @@ import nablarch.core.db.DbAccessException;
 import nablarch.core.db.DbExecutionContext;
 import nablarch.core.db.connection.AppDbConnection;
 import nablarch.core.db.dialect.Dialect;
-import nablarch.core.db.dialect.converter.AttributeConverter;
 import nablarch.core.db.statement.ParameterHolder.NopParameterHolder;
 import nablarch.core.db.statement.ParameterHolder.ParamValue;
 import nablarch.core.db.statement.exception.SqlStatementException;
@@ -188,7 +187,7 @@ public class BasicSqlPStatement implements SqlPStatement, ParameterizedSqlPState
 
                 try {
                     long fetchStart = System.currentTimeMillis();
-                    result = createSqlResultSet(new ResultSetIterator(rs, getResultSetConvertor()), start, limit);
+                    result = createSqlResultSet(new ResultSetIterator(rs, getResultSetConvertor(), context), start, limit);
                     fetchTime = System.currentTimeMillis() - fetchStart;
 
                 } catch (RuntimeException e) {
@@ -440,7 +439,7 @@ public class BasicSqlPStatement implements SqlPStatement, ParameterizedSqlPState
 
             @Override
             ResultSetIterator execute() throws SQLException {
-                ResultSetIterator iter = new ResultSetIterator(statement.executeQuery(), getResultSetConvertor());
+                ResultSetIterator iter = new ResultSetIterator(statement.executeQuery(), getResultSetConvertor(), context);
                 iter.setStatement(BasicSqlPStatement.this);
                 if (needsClientSidePagination()) {
                     for (int i = 0; (i < selectOption.getOffset()) && iter.next(); i++);
@@ -688,8 +687,9 @@ public class BasicSqlPStatement implements SqlPStatement, ParameterizedSqlPState
     @Override
     public void setObject(final int parameterIndex, final Object x, final int targetSqlType) {
         try {
-            statement.setObject(parameterIndex, x, targetSqlType);
-            paramHolder.add(parameterIndex, x);
+            final Object dbValue = convertToDatabase(x);
+            statement.setObject(parameterIndex, dbValue, targetSqlType);
+            paramHolder.add(parameterIndex, dbValue);
         } catch (SQLException e) {
             throw new DbAccessException("failed to setObject.", e);
         }
@@ -699,8 +699,9 @@ public class BasicSqlPStatement implements SqlPStatement, ParameterizedSqlPState
     @Override
     public void setObject(final int parameterIndex, final Object x) {
         try {
-            statement.setObject(parameterIndex, x);
-            paramHolder.add(parameterIndex, x);
+            final Object dbValue = convertToDatabase(x);
+            statement.setObject(parameterIndex, dbValue);
+            paramHolder.add(parameterIndex, dbValue);
         } catch (SQLException e) {
             throw new DbAccessException("failed to setObject.", e);
         }
@@ -1084,7 +1085,6 @@ public class BasicSqlPStatement implements SqlPStatement, ParameterizedSqlPState
      * @throws SQLException データベースアクセス例外が発生した場合
      */
     private void setMap(Map<String, ?> map) throws SQLException {
-        final Dialect dialect = context.getDialect();
         for (int i = 0; i < namedParameterHolderList.size(); i++) {
             final NamedParameterHolder namedParameterHolder = namedParameterHolderList.get(i);
             if (!map.containsKey(namedParameterHolder.getParameterName())) {
@@ -1108,11 +1108,21 @@ public class BasicSqlPStatement implements SqlPStatement, ParameterizedSqlPState
                 }
             }
 
-            final Class<?> javaType = value == null ? null : value.getClass();
-            final Object dbValue = dialect.convertToDatabase(value, javaType);
+            final Object dbValue = convertToDatabase(value);
             statement.setObject(i + 1, dbValue);
             paramHolder.add(namedParameterHolder.getParameterName(), dbValue);
         }
+    }
+
+    /**
+     * データベースへ出力する値に変換する。
+     * @param value 変換対象の値
+     * @return 出力する値
+     */
+    private Object convertToDatabase(final Object value) {
+        final Class<?> javaType = value == null ? null : value.getClass();
+        final Dialect dialect = context.getDialect();
+        return dialect.convertToDatabase(value, javaType);
     }
 
     /**

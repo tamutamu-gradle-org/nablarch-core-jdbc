@@ -1,10 +1,7 @@
 package nablarch.core.db.statement;
 
 import static mockit.Deencapsulation.invoke;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
@@ -13,7 +10,6 @@ import java.sql.Blob;
 import java.sql.SQLException;
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.sql.Types;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -225,7 +221,7 @@ public abstract class SqlRowTestLogic {
      * {@link SqlRow#getInteger(String)}のテストで、
      * 対象の値がIntegerの範囲外の場合エラーとなること。
      */
-    @Test(expected = NumberFormatException.class)
+    @Test(expected = IllegalStateException.class)
     public void getInteger_overflow() throws Exception {
         // ------------------------------------------------ setup
         VariousDbTestHelper.setUpTable(
@@ -245,7 +241,7 @@ public abstract class SqlRowTestLogic {
      * {@link SqlRow#getInteger(String)}のテストで、
      * 対象の値が数値ではない場合はエラーとなること。
      */
-    @Test(expected = NumberFormatException.class)
+    @Test(expected = IllegalStateException.class)
     public void getInteger_notNumeric() throws Exception {
         // ------------------------------------------------ setup
         VariousDbTestHelper.setUpTable(
@@ -329,7 +325,7 @@ public abstract class SqlRowTestLogic {
      * {@link SqlRow#getLong(String)}のテストで、
      * 対象の値がLongの範囲外の場合エラーとなること。
      */
-    @Test(expected = NumberFormatException.class)
+    @Test(expected = IllegalStateException.class)
     public void getLong_overflow() throws Exception {
         // ------------------------------------------------ setup
         final SqlRowEntity entity = SqlRowEntity.createDefaultValueInstance(1L);
@@ -349,7 +345,7 @@ public abstract class SqlRowTestLogic {
      * {@link SqlRow#getLong(String)}のテストで、
      * 対象の値が数値ではない場合はエラーとなること。
      */
-    @Test(expected = NumberFormatException.class)
+    @Test(expected = IllegalStateException.class)
     public void getLong_notNumeric() throws Exception {
         // ------------------------------------------------ setup
         VariousDbTestHelper.setUpTable(
@@ -362,7 +358,7 @@ public abstract class SqlRowTestLogic {
 
         // ------------------------------------------------ assert
         final SqlRow sut = rs.get(0);
-        sut.getInteger("varcharCol");              // 非数値の値
+        sut.getLong("varcharCol");              // 非数値の値
     }
 
     /**
@@ -434,7 +430,7 @@ public abstract class SqlRowTestLogic {
      * {@link SqlRow#getBigDecimal(String)}のテストで、
      * 対象の値が数値ではない場合はエラーとなること。
      */
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = IllegalStateException.class)
     public void getBigDecimal_notNumeric() throws Exception {
         // ------------------------------------------------ setup
         VariousDbTestHelper.setUpTable(
@@ -730,8 +726,6 @@ public abstract class SqlRowTestLogic {
         new Expectations(sut) {{
             invoke(sut, "getObject", "binaryCol");
             result = mockBlob;
-            sut.getColType("binaryCol");
-            result = Types.BLOB;
             mockBlob.length();
             result = new SQLException("blob access error");
         }};
@@ -848,6 +842,22 @@ public abstract class SqlRowTestLogic {
         statement.retrieve()
                 .get(0)
                 .getBoolean("binaryCol");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void getBoolean_columnNotFound() throws Exception {
+        // ------------------------------------------------ setup
+        VariousDbTestHelper.setUpTable(
+                SqlRowEntity.createDefaultValueInstance(1L)
+        );
+
+        // ------------------------------------------------ find
+        final SqlPStatement statement = connection.prepareStatement("SELECT * FROM SQLROW_TEST");
+        final SqlResultSet rs = statement.retrieve();
+
+        // ------------------------------------------------ assert
+        final SqlRow sut = rs.get(0);
+        sut.getBoolean("notFound");
     }
 
     /**

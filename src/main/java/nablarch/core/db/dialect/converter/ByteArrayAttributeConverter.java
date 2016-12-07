@@ -50,7 +50,7 @@ public class ByteArrayAttributeConverter implements AttributeConverter<byte[]> {
         } else if (databaseAttribute instanceof Blob) {
             try {
                 final int length = (int) ((Blob) databaseAttribute).length();
-                return ((Blob) databaseAttribute).getBytes(0, length);
+                return ((Blob) databaseAttribute).getBytes(1, length);
             } catch (SQLException e) {
                 throw new DbAccessException("BLOB access failed.", e);
             }

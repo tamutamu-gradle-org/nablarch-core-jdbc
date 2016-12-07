@@ -70,7 +70,7 @@ public class ByteArrayAttributeConverterTest {
             new Expectations() {{
                 mockBlob.length();
                 result = 5;
-                mockBlob.getBytes(0, 5);
+                mockBlob.getBytes(1, 5);
                 result = new byte[] {0x30, 0x31, 0x32, 0x33, 0x34};
             }};
             assertThat(sut.convertFromDatabase(mockBlob), is(new byte[] {0x30, 0x31, 0x32, 0x33, 0x34}));
