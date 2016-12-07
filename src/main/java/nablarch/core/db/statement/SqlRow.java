@@ -89,8 +89,7 @@ public class SqlRow extends MultipleKeyCaseMap<Object> {
      * @see Dialect#convertFromDatabase(Object, Class) 
      */
     public final String getString(String colName) {
-        final Object object = getObject(colName);
-        return dialect.convertFromDatabase(object, String.class);
+        return getObject(colName, String.class);
     }
 
     /**
@@ -103,12 +102,7 @@ public class SqlRow extends MultipleKeyCaseMap<Object> {
      * @see DefaultDialect#convertFromDatabase(Object, Class) 
      */
     public final Integer getInteger(String colName) {
-        final Object object = getObject(colName);
-        try {
-            return dialect.convertFromDatabase(object, Integer.class);
-        } catch (RuntimeException e) {
-            throw new IllegalStateException("Data types incompatible with Integer. column name = [" + colName + ']', e);
-        }
+        return getObject(colName, Integer.class);
     }
 
     /**
@@ -122,12 +116,7 @@ public class SqlRow extends MultipleKeyCaseMap<Object> {
      * @see Dialect#convertFromDatabase(Object, Class) 
      */
     public final Long getLong(String colName) {
-        final Object object = getObject(colName);
-        try {
-            return dialect.convertFromDatabase(object, Long.class);
-        } catch (RuntimeException e) {
-            throw new IllegalStateException("Data types incompatible with Integer. column name = [" + colName + ']', e);
-        }
+        return getObject(colName, Long.class);
     }
 
     /**
@@ -141,12 +130,7 @@ public class SqlRow extends MultipleKeyCaseMap<Object> {
      * @see Dialect#convertFromDatabase(Object, Class) 
      */
     public Boolean getBoolean(String colName) {
-        final Object object = getObject(colName);
-        try {
-            return dialect.convertFromDatabase(object, Boolean.class);
-        } catch (RuntimeException e) {
-            throw new IllegalStateException("Data types incompatible with Boolean. column name = [" + colName + ']', e);
-        }
+        return getObject(colName, Boolean.class);
     }
 
     /**
@@ -160,12 +144,7 @@ public class SqlRow extends MultipleKeyCaseMap<Object> {
      * @see Dialect#convertFromDatabase(Object, Class) 
      */
     public final BigDecimal getBigDecimal(String colName) {
-        final Object object = getObject(colName);
-        try {
-            return dialect.convertFromDatabase(object, BigDecimal.class);
-        } catch (RuntimeException e) {
-            throw new IllegalStateException("Data types incompatible with BigDecimal. column name = [" + colName + ']', e);
-        }
+        return getObject(colName, BigDecimal.class);
     }
 
     /**
@@ -178,13 +157,7 @@ public class SqlRow extends MultipleKeyCaseMap<Object> {
      * @see Dialect#convertFromDatabase(Object, Class) 
      */
     public Date getDate(String colName) {
-        final Object object = getObject(colName);
-        try {
-            return dialect.convertFromDatabase(object, Date.class);
-        } catch (RuntimeException e) {
-            throw new IllegalStateException("data is not date type. column name = [" + colName + ']', e);
-
-        }
+        return getObject(colName, Date.class);
     }
 
     /**
@@ -196,12 +169,7 @@ public class SqlRow extends MultipleKeyCaseMap<Object> {
      * @see Dialect#convertFromDatabase(Object, Class) 
      */
     public Timestamp getTimestamp(String colName) {
-        final Object object = getObject(colName);
-        try {
-            return dialect.convertFromDatabase(object, Timestamp.class);
-        } catch (RuntimeException e) {
-            throw new IllegalStateException("data is not timestamp type. column name = [" + colName + ']', e);
-        }
+        return getObject(colName, Timestamp.class);
     }
 
     /**
@@ -216,14 +184,7 @@ public class SqlRow extends MultipleKeyCaseMap<Object> {
      * @see Dialect#convertFromDatabase(Object, Class) 
      */
     public byte[] getBytes(String colName) {
-        final Object object = getObject(colName);
-        try {
-            return dialect.convertFromDatabase(object, byte[].class);
-        } catch (DbAccessException e) {
-            throw e;
-        } catch (RuntimeException e) {
-            throw new IllegalStateException("data is not bytes type. column name = [" + colName + ']', e);
-        }
+        return getObject(colName, byte[].class);
     }
 
     /**

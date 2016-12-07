@@ -869,8 +869,6 @@ public abstract class SqlRowTestLogic {
         SqlRow sut = statement.retrieve().get(0);
         assertThat("Stringを指定して取得できる",
                 sut.getObject("varcharCol", String.class), is("あいうえおかきくけこ"));
-        assertThat("Stringを指定して取得できる",
-                sut.getObject("charCol", String.class), is("a"));
     }
 
     @Test
@@ -880,11 +878,7 @@ public abstract class SqlRowTestLogic {
         final SqlPStatement statement = connection.prepareStatement("SELECT * FROM SQLROW_TEST");
         SqlRow sut = statement.retrieve().get(0);
         assertThat("Integerを指定して取得できる",
-                sut.getObject("varcharCol", Integer.class), is(Integer.MAX_VALUE));
-        assertThat("Integerを指定して取得できる",
                 sut.getObject("integerCol", Integer.class), is(2));
-        assertThat("Integerを指定して取得できる",
-                sut.getObject("longCol", Integer.class), is(3));
     }
 
     @Test(expected = IllegalArgumentException.class)
