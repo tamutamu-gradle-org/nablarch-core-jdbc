@@ -206,7 +206,7 @@ public class SqlRow extends MultipleKeyCaseMap<Object> {
         } catch (DbAccessException e) {
             throw e;
         } catch (RuntimeException e) {
-            throw new IllegalStateException("Data types incompatible with " + javaType.getSimpleName() + ". column name = [" + colName + "]", e);
+            throw new IllegalStateException("Attribute convertor for dialect is not supported. column name = [" + colName + "], data type = [" + javaType.getSimpleName() + "].", e);
         }
     }
 
