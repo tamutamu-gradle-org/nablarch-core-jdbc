@@ -60,13 +60,9 @@ public class BigDecimalAttributeConverter implements AttributeConverter<BigDecim
         if (databaseAttribute == null) {
             return null;
         } else if (databaseAttribute instanceof BigDecimal) {
-            return (BigDecimal) databaseAttribute;
-        } else if (databaseAttribute instanceof Integer) {
-            return BigDecimal.valueOf((Integer) databaseAttribute);
-        } else if (databaseAttribute instanceof Long) {
-            return BigDecimal.valueOf((Long) databaseAttribute);
-        } else if (databaseAttribute instanceof Short) {
-            return BigDecimal.valueOf((Short) databaseAttribute);
+            return BigDecimal.class.cast(databaseAttribute);
+        } else if (databaseAttribute instanceof Number) {
+            return new BigDecimal(databaseAttribute.toString());
         } else if (databaseAttribute instanceof String) {
             return new BigDecimal((String) databaseAttribute);
         }
