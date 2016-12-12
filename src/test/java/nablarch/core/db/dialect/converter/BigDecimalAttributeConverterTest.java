@@ -95,7 +95,17 @@ public class BigDecimalAttributeConverterTest {
         public void convertFromString() throws Exception {
             assertThat(sut.convertFromDatabase("12345.54321"), is(new BigDecimal("12345.54321")));
         }
-
+        
+        @Test
+        public void convertFromDouble() throws Exception {
+            assertThat(sut.convertFromDatabase(Double.valueOf("1.1")), is(new BigDecimal("1.1")));
+        }
+        
+        @Test
+        public void convertFromFloat() throws Exception {
+            assertThat(sut.convertFromDatabase(Float.valueOf("1.2")), is(new BigDecimal("1.2")));
+        }
+        
         @Test
         public void convertFromTimestamp_shouldThrowException() throws Exception {
             expectedException.expect(IllegalArgumentException.class);
