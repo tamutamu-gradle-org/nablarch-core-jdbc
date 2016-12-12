@@ -184,7 +184,7 @@ public class DefaultDialectTest {
     @Test
     public void testConvertToDatabaseNotFound() {
         exception.expect(IllegalStateException.class);
-        exception.expectMessage("Attribute converter for dialect is not supported. Java type = [BigInteger].");
+        exception.expectMessage("This dialect does not support [BigInteger] type.");
 
         sut.convertToDatabase(BigInteger.valueOf(100), Integer.class);
     }
@@ -222,7 +222,7 @@ public class DefaultDialectTest {
     @Test
     public void testConvertFromDatabaseNotFound() {
         exception.expect(IllegalStateException.class);
-        exception.expectMessage("Attribute converter for dialect is not supported. Java type = [BigInteger].");
+        exception.expectMessage("This dialect does not support [BigInteger] type.");
 
         sut.convertFromDatabase("100", BigInteger.class);
     }

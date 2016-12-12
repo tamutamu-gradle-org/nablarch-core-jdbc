@@ -195,7 +195,7 @@ public class DefaultDialect implements Dialect {
     protected <T> AttributeConverter<T> getAttributeConverter(Class<T> javaType) {
         AttributeConverter<T> converter = (AttributeConverter<T>) ATTRIBUTE_CONVERTER_MAP.get(javaType);
         if (converter == null) {
-            throw new IllegalStateException("Attribute converter for dialect is not supported. Java type = [" + javaType.getSimpleName() + "].");
+            throw new IllegalStateException("This dialect does not support [" + javaType.getSimpleName() + "] type.");
         }
         return converter;
     }
