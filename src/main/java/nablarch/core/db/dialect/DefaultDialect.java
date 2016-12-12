@@ -193,7 +193,11 @@ public class DefaultDialect implements Dialect {
      */
     @SuppressWarnings("unchecked")
     protected <T> AttributeConverter<T> getAttributeConverter(Class<T> javaType) {
-        return (AttributeConverter<T>) ATTRIBUTE_CONVERTER_MAP.get(javaType);
+        AttributeConverter<T> converter = (AttributeConverter<T>) ATTRIBUTE_CONVERTER_MAP.get(javaType);
+        if (converter == null) {
+            throw new IllegalStateException("This dialect does not support [" + javaType.getSimpleName() + "] type.");
+        }
+        return converter;
     }
 }
 
