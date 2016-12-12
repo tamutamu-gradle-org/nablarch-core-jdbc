@@ -181,6 +181,10 @@ public class DefaultDialect implements Dialect {
     @Override
     public <T> T convertFromDatabase(final Object value, final Class<T> javaType) {
         final AttributeConverter<T> converter = getAttributeConverter(javaType);
+        if (converter == null) {
+            throw new IllegalStateException("Attribute convertor for dialect is not supported. from DB type ["
+                    + value.getClass().getSimpleName() + "] to Java type [" + javaType.getSimpleName() + "].");
+        }
         return converter.convertFromDatabase(value);
     }
 
