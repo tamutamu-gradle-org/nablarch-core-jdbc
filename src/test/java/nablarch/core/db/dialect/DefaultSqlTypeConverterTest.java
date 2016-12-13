@@ -43,12 +43,8 @@ public class DefaultSqlTypeConverterTest {
         assertTrue(sut.convertToJavaClass(Types.BINARY).isAssignableFrom(byte[].class));
         assertTrue(sut.convertToJavaClass(Types.VARBINARY).isAssignableFrom(byte[].class));
         assertTrue(sut.convertToJavaClass(Types.LONGVARBINARY).isAssignableFrom(byte[].class));
-        assertTrue(sut.convertToJavaClass(Types.STRUCT).isAssignableFrom(Struct.class));
-        assertTrue(sut.convertToJavaClass(Types.ARRAY).isAssignableFrom(Array.class));
-        assertTrue(sut.convertToJavaClass(Types.BLOB).isAssignableFrom(Blob.class));
-        assertTrue(sut.convertToJavaClass(Types.CLOB).isAssignableFrom(Clob.class));
-        assertTrue(sut.convertToJavaClass(Types.REF).isAssignableFrom(Ref.class));
-        assertTrue(sut.convertToJavaClass(Types.DATALINK).isAssignableFrom(URL.class));
+        assertTrue(sut.convertToJavaClass(Types.BLOB).isAssignableFrom(byte[].class));
+        assertTrue(sut.convertToJavaClass(Types.CLOB).isAssignableFrom(String.class));
         assertTrue(sut.convertToJavaClass(Types.BOOLEAN).isAssignableFrom(Boolean.class));
     }
 

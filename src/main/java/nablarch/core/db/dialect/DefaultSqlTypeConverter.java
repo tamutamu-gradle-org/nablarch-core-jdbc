@@ -1,7 +1,6 @@
 package nablarch.core.db.dialect;
 
 import java.math.BigDecimal;
-import java.net.URL;
 import java.sql.*;
 import java.util.Collections;
 import java.util.HashMap;
@@ -42,12 +41,8 @@ public class DefaultSqlTypeConverter implements SqlTypeConverter {
         classConverterMap.put(Types.BINARY, byte[].class);
         classConverterMap.put(Types.VARBINARY, byte[].class);
         classConverterMap.put(Types.LONGVARBINARY, byte[].class);
-        classConverterMap.put(Types.STRUCT, Struct.class);
-        classConverterMap.put(Types.ARRAY, Array.class);
-        classConverterMap.put(Types.BLOB, Blob.class);
-        classConverterMap.put(Types.CLOB, Clob.class);
-        classConverterMap.put(Types.REF, Ref.class);
-        classConverterMap.put(Types.DATALINK, URL.class);
+        classConverterMap.put(Types.BLOB, byte[].class);
+        classConverterMap.put(Types.CLOB, String.class);
         classConverterMap.put(Types.BOOLEAN, Boolean.class);
 
         CLASS_CONVERTER_MAP = Collections.unmodifiableMap(classConverterMap);
