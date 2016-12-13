@@ -5,13 +5,7 @@ import static org.hamcrest.text.IsEmptyString.isEmptyString;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
-import java.sql.Blob;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -369,6 +363,57 @@ public class OracleDialectTest {
         final ResultSet rs = statement.executeQuery();
         assertThat(rs, is(notNullValue()));
         rs.close();
+    }
+
+    @Test
+    public void convertToDatabaseFromSqlType() throws Exception {
+        // 文字データ型として出力
+        Object converted = sut.convertToDatabase("", Types.VARCHAR);
+        assertThat("empty string->null", converted, is(nullValue()));
+
+        String stringTarget = "test";
+        assertThat("string->CHAR", (String) sut.convertToDatabase(stringTarget, Types.CHAR), is(stringTarget));
+        assertThat("string->VARCHAR", (String) sut.convertToDatabase(stringTarget, Types.VARCHAR), is(stringTarget));
+        assertThat("string->LONG", (String) sut.convertToDatabase(stringTarget, Types.LONGVARCHAR), is(stringTarget));
+
+        // 数値データ型として出力
+        BigDecimal bigDecimalTarget = BigDecimal.ONE;
+        assertThat("BigDecimal->NUMERIC", (BigDecimal) sut.convertToDatabase(bigDecimalTarget, Types.NUMERIC), is(BigDecimal.ONE));
+        assertThat("BigDecimal->DECIMAL", (BigDecimal) sut.convertToDatabase(bigDecimalTarget, Types.DECIMAL), is(BigDecimal.ONE));
+
+        boolean booleanTarget = true;
+        assertThat("boolean->BIT", (Boolean) sut.convertToDatabase(booleanTarget, Types.BIT), is(true));
+
+        byte byteTarget = 0x01;
+        assertThat("byte->TINYINT", (Byte) sut.convertToDatabase(byteTarget, Types.TINYINT), is(byteTarget));
+
+        int integerTarget = 1;
+        assertThat("int->INTEGER", (Integer) sut.convertToDatabase(integerTarget, Types.INTEGER), is(1));
+
+        long longTarget = 1L;
+        assertThat("long->BIGINT", (Long) sut.convertToDatabase(longTarget, Types.BIGINT), is(longTarget));
+
+        // RAWデータ型として出力
+        byte[] bytesTarget = new byte[] {0x30, 0x39};
+        assertThat("byte->BINARY", (byte[]) sut.convertToDatabase(bytesTarget, Types.BINARY), is(bytesTarget));
+        assertThat("byte->VARBINARY", (byte[]) sut.convertToDatabase(bytesTarget, Types.VARBINARY), is(bytesTarget));
+        assertThat("byte->LONGVARBINARY", (byte[]) sut.convertToDatabase(bytesTarget, Types.LONGVARBINARY), is(bytesTarget));
+
+        // DATEデータ型として出力
+        Date dateTarget = new Date(System.currentTimeMillis());
+        assertThat("Date->DATE", (java.sql.Date) sut.convertToDatabase(dateTarget, Types.DATE),
+                is(new java.sql.Date(DbUtil.trimTime(new Date(System.currentTimeMillis())).getTimeInMillis())));
+
+        String timestampTargetString = "2016-12-13 12:34:56.789012";
+        assertThat("Timestamp->TIMESTAMP",
+                (java.sql.Timestamp) sut.convertToDatabase(Timestamp.valueOf(timestampTargetString), Types.TIMESTAMP),
+                is(java.sql.Timestamp.valueOf(timestampTargetString)));
+
+        // LOBデータ型として出力
+        String clobTarget = "clob";
+        assertThat("string->CLOB", (String) sut.convertToDatabase(clobTarget, Types.CLOB), is(clobTarget));
+        byte[] blobTarget = new byte[] {0x01, 0x02};
+        assertThat("string->BLOB", (byte[]) sut.convertToDatabase(blobTarget, Types.BLOB), is(new byte[] {0x01, 0x02}));
     }
 
     @Test

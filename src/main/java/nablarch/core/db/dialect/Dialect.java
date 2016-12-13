@@ -97,6 +97,14 @@ public interface Dialect {
     String getPingSql();
 
     /**
+     * SQL型をもとにデータベースに出力する値に変換する。
+     * @param value 出力する値
+     * @param sqlType SQL型
+     * @return 変換後の値
+     */
+    Object convertToDatabase(final Object value, final int sqlType);
+
+    /**
      * データベースに出力する値に変換する。
      * @param value 出力する値
      * @param dbType データベースの型に対応したクラス

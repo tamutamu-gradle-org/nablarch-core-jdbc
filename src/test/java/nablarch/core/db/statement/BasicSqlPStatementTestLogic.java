@@ -1997,7 +1997,7 @@ public abstract class BasicSqlPStatementTestLogic {
         final SqlPStatement sut = dbCon.prepareStatement(
                 "insert into STATEMENT_TEST_TABLE (ENTITY_ID, LONG_COL, INTEGER_COL, TIMESTAMP_COL) VALUES (?, ?, ?, ?)");
         sut.setObject(1, "44444", Types.CHAR);
-        sut.setObject(2, "100", Types.BIGINT);
+        sut.setObject(2, 100, Types.BIGINT);
         sut.setObject(3, -1, Types.INTEGER);
         sut.setObject(4, timestamp, Types.TIMESTAMP);
         final int inserted = sut.executeUpdate();

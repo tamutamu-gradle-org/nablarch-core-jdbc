@@ -9,17 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import nablarch.core.db.dialect.converter.AttributeConverter;
-import nablarch.core.db.dialect.converter.BigDecimalAttributeConverter;
-import nablarch.core.db.dialect.converter.BooleanAttributeConverter;
-import nablarch.core.db.dialect.converter.ByteArrayAttributeConverter;
-import nablarch.core.db.dialect.converter.IntegerAttributeConverter;
-import nablarch.core.db.dialect.converter.LongAttributeConverter;
-import nablarch.core.db.dialect.converter.ShortAttributeConverter;
-import nablarch.core.db.dialect.converter.SqlDateAttributeConverter;
-import nablarch.core.db.dialect.converter.StringAttributeConverter;
-import nablarch.core.db.dialect.converter.TimestampAttributeConverter;
-import nablarch.core.db.dialect.converter.UtilDateAttributeConverter;
+import nablarch.core.db.dialect.converter.*;
 import nablarch.core.db.statement.ResultSetConvertor;
 import nablarch.core.db.statement.SelectOption;
 import nablarch.core.util.annotation.Published;
@@ -58,7 +48,20 @@ public class DefaultDialect implements Dialect {
         attributeConverterMap.put(byte[].class, new ByteArrayAttributeConverter());
         attributeConverterMap.put(Boolean.class, new BooleanAttributeConverter());
         attributeConverterMap.put(boolean.class, new BooleanAttributeConverter.Primitive());
+        attributeConverterMap.put(Byte.class, new ByteAttributeConverter());
+        attributeConverterMap.put(byte.class, new ByteAttributeConverter.Primitive());
         ATTRIBUTE_CONVERTER_MAP = Collections.unmodifiableMap(attributeConverterMap);
+    }
+
+    /** SQL型をJavaクラスに変換するコンバータ */
+    private SqlTypeConverter sqlTypeConverter = new DefaultSqlTypeConverter();
+
+    /**
+     * SQL型をJavaクラスに変換するコンバータを設定する。
+     * @param sqlTypeConverter SQL型をJavaクラスに変換するコンバータ
+     */
+    public void setSqlTypeConverter(SqlTypeConverter sqlTypeConverter) {
+        this.sqlTypeConverter = sqlTypeConverter;
     }
 
     /**
@@ -166,6 +169,12 @@ public class DefaultDialect implements Dialect {
         public boolean isConvertible(ResultSetMetaData rsmd, int columnIndex) throws SQLException {
             return true;
         }
+    }
+
+    @Override
+    public Object convertToDatabase(final Object value, final int sqlType) {
+        Class dbType = sqlTypeConverter.convertToJavaClass(sqlType);
+        return convertToDatabase(value, dbType);
     }
 
     @Override

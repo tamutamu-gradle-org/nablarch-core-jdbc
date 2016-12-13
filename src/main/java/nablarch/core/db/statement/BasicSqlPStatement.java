@@ -128,6 +128,7 @@ public class BasicSqlPStatement implements SqlPStatement, ParameterizedSqlPState
             }
         }
         closed = false;
+
     }
 
     /** {@inheritDoc} */
@@ -687,7 +688,7 @@ public class BasicSqlPStatement implements SqlPStatement, ParameterizedSqlPState
     @Override
     public void setObject(final int parameterIndex, final Object x, final int targetSqlType) {
         try {
-            final Object dbValue = convertToDatabase(x);
+            final Object dbValue = convertToDatabase(x, targetSqlType);
             statement.setObject(parameterIndex, dbValue, targetSqlType);
             paramHolder.add(parameterIndex, dbValue);
         } catch (SQLException e) {
@@ -1122,7 +1123,18 @@ public class BasicSqlPStatement implements SqlPStatement, ParameterizedSqlPState
     private Object convertToDatabase(final Object value) {
         final Class<?> javaType = value == null ? null : value.getClass();
         final Dialect dialect = context.getDialect();
-        return dialect.convertToDatabase(value, javaType);
+        return dialect.convertToDatabase(value, (Class) javaType);
+    }
+
+    /**
+     * データベースへ出力する値に変換する。
+     * @param value 変換対象の値
+     * @param sqlType SQL型
+     * @return 出力する値
+     */
+    private Object convertToDatabase(final Object value, final int sqlType) {
+        Dialect dialect = context.getDialect();
+        return dialect.convertToDatabase(value, sqlType);
     }
 
     /**
