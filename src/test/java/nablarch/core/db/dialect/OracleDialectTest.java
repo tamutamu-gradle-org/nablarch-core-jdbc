@@ -21,6 +21,7 @@ import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 /**
@@ -35,6 +36,9 @@ public class OracleDialectTest {
 
     @Rule
     public DbTestRule dbTestRule = new DbTestRule();
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     /** テスト対象 */
     private OracleDialect sut = new OracleDialect();
@@ -411,6 +415,15 @@ public class OracleDialectTest {
         assertThat("string->CLOB", (String) sut.convertToDatabase(clobTarget, Types.CLOB), is(clobTarget));
         byte[] blobTarget = new byte[] {0x01, 0x02};
         assertThat("string->BLOB", (byte[]) sut.convertToDatabase(blobTarget, Types.BLOB), is(new byte[] {0x01, 0x02}));
+    }
+
+    @Test
+    public void convertToDatabaseFromSqlType_unsupportedSqlType() {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("unsupported sqlType: 2006");
+        // 未定義のSQL型を指定
+        Object converted = sut.convertToDatabase("123", Types.REF);
+        assertThat("empty string->null", converted, is(nullValue()));
     }
 
     @Test
