@@ -10,7 +10,17 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import nablarch.core.db.dialect.converter.*;
+import nablarch.core.db.dialect.converter.AttributeConverter;
+import nablarch.core.db.dialect.converter.BigDecimalAttributeConverter;
+import nablarch.core.db.dialect.converter.BooleanAttributeConverter;
+import nablarch.core.db.dialect.converter.ByteArrayAttributeConverter;
+import nablarch.core.db.dialect.converter.IntegerAttributeConverter;
+import nablarch.core.db.dialect.converter.LongAttributeConverter;
+import nablarch.core.db.dialect.converter.OracleStringAttributeConverter;
+import nablarch.core.db.dialect.converter.ShortAttributeConverter;
+import nablarch.core.db.dialect.converter.SqlDateAttributeConverter;
+import nablarch.core.db.dialect.converter.TimestampAttributeConverter;
+import nablarch.core.db.dialect.converter.UtilDateAttributeConverter;
 import nablarch.core.db.statement.ResultSetConvertor;
 import nablarch.core.db.statement.SelectOption;
 import nablarch.core.util.annotation.Published;
@@ -50,8 +60,6 @@ public class OracleDialect extends DefaultDialect {
         attributeConverterMap.put(byte[].class, new ByteArrayAttributeConverter());
         attributeConverterMap.put(Boolean.class, new BooleanAttributeConverter());
         attributeConverterMap.put(boolean.class, new BooleanAttributeConverter.Primitive());
-        attributeConverterMap.put(Byte.class, new ByteAttributeConverter());
-        attributeConverterMap.put(byte.class, new ByteAttributeConverter.Primitive());
         ATTRIBUTE_CONVERTER_MAP = Collections.unmodifiableMap(attributeConverterMap);
     }
 
