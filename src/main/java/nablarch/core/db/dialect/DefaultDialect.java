@@ -48,8 +48,6 @@ public class DefaultDialect implements Dialect {
         attributeConverterMap.put(byte[].class, new ByteArrayAttributeConverter());
         attributeConverterMap.put(Boolean.class, new BooleanAttributeConverter());
         attributeConverterMap.put(boolean.class, new BooleanAttributeConverter.Primitive());
-        attributeConverterMap.put(Byte.class, new ByteAttributeConverter());
-        attributeConverterMap.put(byte.class, new ByteAttributeConverter.Primitive());
         ATTRIBUTE_CONVERTER_MAP = Collections.unmodifiableMap(attributeConverterMap);
     }
 

@@ -384,9 +384,6 @@ public class OracleDialectTest {
         boolean booleanTarget = true;
         assertThat("boolean->BIT", (Boolean) sut.convertToDatabase(booleanTarget, Types.BIT), is(true));
 
-        byte byteTarget = 0x01;
-        assertThat("byte->TINYINT", (Byte) sut.convertToDatabase(byteTarget, Types.TINYINT), is(byteTarget));
-
         int integerTarget = 1;
         assertThat("int->INTEGER", (Integer) sut.convertToDatabase(integerTarget, Types.INTEGER), is(1));
 

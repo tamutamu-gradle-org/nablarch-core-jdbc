@@ -18,10 +18,10 @@ public class DefaultSqlTypeConverter implements SqlTypeConverter {
     /**
      * SQL型に対応するJavaクラスのマッピング定義。
      */
-    private static final Map<Integer, Class> CLASS_CONVERTER_MAP;
+    private static final Map<Integer, Class<?>> CLASS_CONVERTER_MAP;
 
     static {
-        final Map<Integer, Class> classConverterMap = new HashMap<Integer, Class>();
+        final Map<Integer, Class<?>> classConverterMap = new HashMap<Integer, Class<?>>();
         classConverterMap.put(Types.BIT, Boolean.class);
         classConverterMap.put(Types.TINYINT, Byte.class);
         classConverterMap.put(Types.SMALLINT, Short.class);
