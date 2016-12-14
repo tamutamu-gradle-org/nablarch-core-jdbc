@@ -4,7 +4,6 @@ import nablarch.core.util.StringUtil;
 
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.sql.Time;
 import java.sql.Timestamp;
 
 /**
@@ -29,6 +28,7 @@ public class StringAttributeConverter implements AttributeConverter<String> {
      *
      * 上記に以外の型への変換はサポートしないため{@link IllegalArgumentException}を送出する。
      */
+    @SuppressWarnings("unchecked")
     @Override
     public <DB> DB convertToDatabase(final String javaAttribute, final Class<DB> databaseType) {
         if (databaseType.isAssignableFrom(String.class)) {

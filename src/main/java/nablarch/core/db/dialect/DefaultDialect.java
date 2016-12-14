@@ -62,7 +62,7 @@ public class DefaultDialect implements Dialect {
     }
 
     /** SQL型をJavaクラスに変換するコンバータ */
-    private static final SqlTypeConverter sqlTypeConverter = new DefaultSqlTypeConverter();
+    private static final SqlTypeConverter SQL_TYPE_CONVERTER = new DefaultSqlTypeConverter();
 
     /**
      * @return {@code false}を返す。
@@ -173,7 +173,7 @@ public class DefaultDialect implements Dialect {
 
     @Override
     public Object convertToDatabase(final Object value, final int sqlType) {
-        Class dbType = sqlTypeConverter.convertToJavaClass(sqlType);
+        Class dbType = SQL_TYPE_CONVERTER.convertToJavaClass(sqlType);
         return convertToDatabase(value, dbType);
     }
 
