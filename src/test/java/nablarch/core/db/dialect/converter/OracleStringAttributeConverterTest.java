@@ -4,6 +4,7 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
+import java.sql.Ref;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,9 +41,9 @@ public class OracleStringAttributeConverterTest {
         @Test
         public void toNotStringType_shouldThrowException() throws Exception {
             expectedException.expect(IllegalArgumentException.class);
-            expectedException.expectMessage("unsupported database type:java.lang.Integer");
+            expectedException.expectMessage("unsupported database type:java.sql.Ref");
 
-            sut.convertToDatabase("1234", Integer.class);
+            sut.convertToDatabase("1234", Ref.class);
         }
     }
 
