@@ -1,5 +1,7 @@
 package nablarch.core.db.dialect.converter;
 
+import java.math.BigDecimal;
+
 /**
  * {@link Boolean}をデータベースとの間で入出力するために変換するクラス。
  *
@@ -12,14 +14,30 @@ public class BooleanAttributeConverter implements AttributeConverter<Boolean> {
      *
      * <ul>
      *     <li>{@link Boolean}</li>
+     *     <li>{@link BigDecimal}</li>
+     *     <li>{@link Integer}</li>
+     *     <li>{@link Long}</li>
+     *     <li>{@link Short}</li>
      * </ul>
+     *
+     * 数値型に変換する場合、変換対象の値がtrueの場合は1を表すその型のオブジェクトを、
+     * falseの場合は0を表すその型のオブジェクトを返す。
      *
      * 上記に以外の型への変換はサポートしないため{@link IllegalArgumentException}を送出する。
      */
+    @SuppressWarnings("unchecked")
     @Override
     public <DB> DB convertToDatabase(final Boolean javaAttribute, final Class<DB> databaseType) {
         if (databaseType.isAssignableFrom(Boolean.class)) {
             return databaseType.cast(javaAttribute);
+        } else if (databaseType.isAssignableFrom(BigDecimal.class)) {
+            return (DB) (javaAttribute ? BigDecimal.ONE : BigDecimal.ZERO);
+        } else if (databaseType.isAssignableFrom(Integer.class)) {
+            return (DB) (javaAttribute ? Integer.valueOf(1) : Integer.valueOf(0));
+        } else if (databaseType.isAssignableFrom(Long.class)) {
+            return (DB) (javaAttribute ? Long.valueOf(1L) : Long.valueOf(0L));
+        } else if (databaseType.isAssignableFrom(Short.class)) {
+            return (DB) (javaAttribute ? Short.valueOf("1") : Short.valueOf("0"));
         }
         throw new IllegalArgumentException("unsupported database type:"
                 + databaseType.getName());

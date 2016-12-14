@@ -32,6 +32,30 @@ public class BooleanAttributeConverterTest {
         }
 
         @Test
+        public void convertToBigDecimal() throws Exception {
+            assertThat(sut.convertToDatabase(true, BigDecimal.class), is(BigDecimal.ONE));
+            assertThat(sut.convertToDatabase(false, BigDecimal.class), is(BigDecimal.ZERO));
+        }
+
+        @Test
+        public void convertToInteger() throws Exception {
+            assertThat(sut.convertToDatabase(true, Integer.class), is(1));
+            assertThat(sut.convertToDatabase(false, Integer.class), is(0));
+        }
+
+        @Test
+        public void convertToLong() throws Exception {
+            assertThat(sut.convertToDatabase(true, Long.class), is(1L));
+            assertThat(sut.convertToDatabase(false, Long.class), is(0L));
+        }
+
+        @Test
+        public void convertToShort() throws Exception {
+            assertThat(sut.convertToDatabase(true, Short.class), is(Short.valueOf("1")));
+            assertThat(sut.convertToDatabase(false, Short.class), is(Short.valueOf("0")));
+        }
+
+        @Test
         public void convertToTimestamp_shouldThrowException() throws Exception {
             expectedException.expect(IllegalArgumentException.class);
             expectedException.expectMessage("unsupported database type:java.sql.Timestamp");
