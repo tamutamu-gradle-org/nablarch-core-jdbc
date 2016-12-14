@@ -54,15 +54,7 @@ public class DefaultDialect implements Dialect {
     }
 
     /** SQL型をJavaクラスに変換するコンバータ */
-    private SqlTypeConverter sqlTypeConverter = new DefaultSqlTypeConverter();
-
-    /**
-     * SQL型をJavaクラスに変換するコンバータを設定する。
-     * @param sqlTypeConverter SQL型をJavaクラスに変換するコンバータ
-     */
-    public void setSqlTypeConverter(SqlTypeConverter sqlTypeConverter) {
-        this.sqlTypeConverter = sqlTypeConverter;
-    }
+    private static final SqlTypeConverter sqlTypeConverter = new DefaultSqlTypeConverter();
 
     /**
      * @return {@code false}を返す。
