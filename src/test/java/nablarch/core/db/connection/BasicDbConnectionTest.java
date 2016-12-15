@@ -4,10 +4,7 @@ import static java.lang.Integer.MIN_VALUE;
 import static java.lang.String.format;
 import static java.sql.Statement.NO_GENERATED_KEYS;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -102,6 +99,7 @@ public class BasicDbConnectionTest {
 
         jdbcConnection = dataSource.getConnection();
         sut = new BasicDbConnection(jdbcConnection);
+        sut.initialize();
         sut.setContext(createContext(sut));
         // StatementFactoryの設定
         BasicStatementFactory statementFactory = createStatementFactory();
