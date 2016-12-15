@@ -37,7 +37,7 @@ public class BooleanAttributeConverter implements AttributeConverter<Boolean> {
         } else if (databaseType.isAssignableFrom(Long.class)) {
             return (DB) (javaAttribute ? Long.valueOf(1L) : Long.valueOf(0L));
         } else if (databaseType.isAssignableFrom(Short.class)) {
-            return (DB) (javaAttribute ? Short.valueOf("1") : Short.valueOf("0"));
+            return (DB) (javaAttribute ? Short.valueOf((short) 1) : Short.valueOf((short) 0));
         }
         throw new IllegalArgumentException("unsupported database type:"
                 + databaseType.getName());
