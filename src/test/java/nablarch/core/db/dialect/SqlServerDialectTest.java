@@ -161,7 +161,7 @@ public class SqlServerDialectTest {
         assertThat("10桁以上の数値型はLongで取得できる", (Long) convertor.convert(rs, meta, 4), is(Long.valueOf("1234554321")));
         assertThat("小数部ありはBigDecimalで取得できる", (BigDecimal) convertor.convert(rs, meta, 5), is(new BigDecimal(
                 "12345.54321")));
-        assertThat("DATE型はDateで取得できる", (Date) convertor.convert(rs, meta, 6), is(date));
+        assertThat("DATE型はTimestampで取得できる", (Timestamp) convertor.convert(rs, meta, 6), is(new Timestamp(date.getTime())));
         assertThat("TIMESTAMP型はTimestampで取得できる", (Timestamp) convertor.convert(rs, meta, 7), is(timestamp));
 
         // binaryはbyte[]で取得される
