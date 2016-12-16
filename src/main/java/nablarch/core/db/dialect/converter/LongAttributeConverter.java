@@ -28,6 +28,10 @@ public class LongAttributeConverter implements AttributeConverter<Long> {
             return databaseType.cast(javaAttribute);
         } else if (databaseType.isAssignableFrom(BigDecimal.class)) {
             return (DB) BigDecimal.valueOf(javaAttribute);
+        } else if (databaseType.isAssignableFrom(Integer.class)) {
+            return (DB) Integer.valueOf(javaAttribute.toString());
+        } else if (databaseType.isAssignableFrom(Short.class)) {
+            return (DB) Short.valueOf(javaAttribute.toString());
         } else if (databaseType.isAssignableFrom(String.class)) {
             return (DB) String.valueOf(javaAttribute);
         }

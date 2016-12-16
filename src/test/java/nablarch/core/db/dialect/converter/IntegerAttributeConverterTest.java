@@ -38,6 +38,11 @@ public class IntegerAttributeConverterTest {
         public void convertToLong() throws Exception {
             assertThat(sut.convertToDatabase(100, Long.class), is(100L));
         }
+        
+        @Test
+        public void convertToShort() throws Exception {
+            assertThat(sut.convertToDatabase(100, Short.class), is((short) 100));
+        }
 
         @Test
         public void convertToString() throws Exception {
