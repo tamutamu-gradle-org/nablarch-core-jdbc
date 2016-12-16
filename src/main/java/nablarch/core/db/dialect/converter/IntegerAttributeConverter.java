@@ -16,6 +16,7 @@ public class IntegerAttributeConverter implements AttributeConverter<Integer> {
      *     <li>{@link Integer}</li>
      *     <li>{@link BigDecimal}</li>
      *     <li>{@link Long}</li>
+     *     <li>{@link Short}</li>
      *     <li>{@link String}</li>
      * </ul>
      *
@@ -31,6 +32,8 @@ public class IntegerAttributeConverter implements AttributeConverter<Integer> {
             return (DB) BigDecimal.valueOf(javaAttribute);
         } else if (databaseType.isAssignableFrom(Long.class)) {
             return (DB) Long.valueOf(javaAttribute);
+        } else if (databaseType.isAssignableFrom(Short.class)) {
+            return (DB) Short.valueOf(javaAttribute.toString());
         } else if (databaseType.isAssignableFrom(String.class)) {
             return (DB) String.valueOf(javaAttribute);
         }

@@ -37,6 +37,16 @@ public class LongAttributeConverterTest {
         public void convertToBigDecimal() throws Exception {
             assertThat(sut.convertToDatabase(INPUT, BigDecimal.class), is(BigDecimal.valueOf(12345L)));
         }
+        
+        @Test
+        public void convertToInteger() throws Exception {
+            assertThat(sut.convertToDatabase(INPUT, Integer.class), is(12345));
+        }
+        
+        @Test
+        public void convertToShort() throws Exception {
+            assertThat(sut.convertToDatabase(INPUT, Short.class), is((short) 12345));
+        }
 
         @Test
         public void convertToString() throws Exception {
