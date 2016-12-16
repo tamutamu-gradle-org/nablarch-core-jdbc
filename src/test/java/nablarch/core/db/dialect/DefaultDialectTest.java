@@ -3,6 +3,7 @@ package nablarch.core.db.dialect;
 import nablarch.core.db.statement.ResultSetConvertor;
 import nablarch.core.db.util.DbUtil;
 import nablarch.test.support.db.helper.DatabaseTestRunner;
+import nablarch.test.support.db.helper.TargetDb;
 import nablarch.test.support.db.helper.VariousDbTestHelper;
 import org.junit.After;
 import org.junit.BeforeClass;
@@ -92,6 +93,7 @@ public class DefaultDialectTest {
      * メタ情報を使わず{@link java.sql.ResultSet}からカラム番号で取得する。
      */
     @Test
+    @TargetDb(include = TargetDb.Db.ORACLE)
     public void testGetResultSetConvertor() throws Exception {
         Date date = new Date();
         Timestamp timestamp = Timestamp.valueOf("2015-03-16 01:02:03.123456");
