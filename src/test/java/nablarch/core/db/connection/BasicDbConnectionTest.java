@@ -14,6 +14,7 @@ import static org.junit.Assert.fail;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -1329,6 +1330,7 @@ public class BasicDbConnectionTest {
     }
 
     @Test
+    @TargetDb(exclude = TargetDb.Db.H2)
     public void testPrepareCallBySqlId() throws Exception {
         // ----------------------------------------- cache off
         sut.setStatementReuse(false);
@@ -1365,6 +1367,15 @@ public class BasicDbConnectionTest {
                     format("failed to prepareCallBySqlId. SQL_ID = [%s]", sqlId),
                     e.getMessage());
         }
+    }
+    
+    @Test
+    @TargetDb(include = TargetDb.Db.H2)
+    public void testPrepareCallBySqlId_H2() throws Exception {
+        final Connection connection = sut.getConnection();
+        final Statement statement = connection.createStatement();
+        statement.execute("create alias if not exists proc_name as $$ void procName(String a, String b) {String c = a + b;}$$");
+        testPrepareCallBySqlId();
     }
 
     /**
