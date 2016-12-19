@@ -1,12 +1,14 @@
 package nablarch.core.db.dialect;
 
-import nablarch.core.db.statement.SelectOption;
-
 import java.sql.SQLException;
+
+import nablarch.core.db.statement.SelectOption;
 
 /**
  * H2用のSQL方言クラス。
- *
+ * 
+ * このクラスは、1.4.191により動作確認を行っている。
+ * 
  * @author Masaya Seko
  *
  */

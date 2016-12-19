@@ -1,11 +1,6 @@
 package nablarch.core.db.statement;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -1982,7 +1977,7 @@ public abstract class BasicSqlPStatementTestLogic {
             mockStatement.setObject(anyInt, any);
             result = new SQLException("setObject error");
         }};
-        final SqlPStatement sut = dbCon.prepareStatement("SELECT * FROM STATEMENT_TEST_TABLE WHERE ID = ?");
+        final SqlPStatement sut = dbCon.prepareStatement("SELECT * FROM STATEMENT_TEST_TABLE WHERE ENTITY_ID = ?");
         Deencapsulation.setField(sut, mockStatement);
         sut.setObject(1, "12345");
     }
@@ -2042,7 +2037,7 @@ public abstract class BasicSqlPStatementTestLogic {
             mockStatement.setObject(anyInt, any, anyInt);
             result = new SQLException("setObjectWithType error");
         }};
-        final SqlPStatement sut = dbCon.prepareStatement("SELECT * FROM STATEMENT_TEST_TABLE WHERE ID = ?");
+        final SqlPStatement sut = dbCon.prepareStatement("SELECT * FROM STATEMENT_TEST_TABLE WHERE ENTITY_ID = ?");
         Deencapsulation.setField(sut, mockStatement);
         sut.setObject(1, "12345", Types.CHAR);
     }
@@ -3333,7 +3328,7 @@ public abstract class BasicSqlPStatementTestLogic {
      * {@link BasicSqlPStatement#getGeneratedKeys()}のテスト。
      */
     @Test
-    @TargetDb(exclude = TargetDb.Db.SQL_SERVER)
+    @TargetDb(exclude = {TargetDb.Db.SQL_SERVER, TargetDb.Db.H2})
     public void getGeneratedKeys() throws Exception {
         final Connection connection = VariousDbTestHelper.getNativeConnection();
         String pkName = "entity_id";
@@ -3366,7 +3361,7 @@ public abstract class BasicSqlPStatementTestLogic {
      * ※SQLServerは、自動生成キーは自動生成カラムのみ対応
      */
     @Test
-    @TargetDb(include = TargetDb.Db.SQL_SERVER)
+    @TargetDb(include = {TargetDb.Db.SQL_SERVER, TargetDb.Db.H2})
     public void getGeneratedKeys_SQLServer() throws Exception {
         VariousDbTestHelper.createTable(SqlServerTestEntity.class);
         final SqlPStatement sut = dbCon.prepareStatement(
@@ -3383,7 +3378,6 @@ public abstract class BasicSqlPStatementTestLogic {
             actual.close();
         }
     }
-
 
     /**
      * {@link BasicSqlPStatement#clearParameters()} のテスト。
