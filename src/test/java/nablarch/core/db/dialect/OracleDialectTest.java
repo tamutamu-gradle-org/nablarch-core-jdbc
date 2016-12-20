@@ -5,6 +5,7 @@ import static org.hamcrest.text.IsEmptyString.isEmptyString;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.*;
 import java.util.Calendar;
 import java.util.Date;
@@ -444,6 +445,18 @@ public class OracleDialectTest {
         assertThat("Boolean", sut.convertToDatabase(true, Boolean.class), is(Boolean.TRUE));
     }
 
+    /**
+     * DBに出力するとき、
+     * コンバータが設定されていないと例外を送出する。
+     */
+    @Test
+    public void testConvertToDatabaseNotFound() {
+        expectedException.expect(IllegalStateException.class);
+        expectedException.expectMessage("This dialect does not support [BigInteger] type.");
+
+        sut.convertToDatabase(BigInteger.valueOf(100), Integer.class);
+    }
+
     @Test
     public void convertFromDatabase() throws Exception {
         assertThat("String", sut.convertFromDatabase("あああ", String.class), is("あああ"));
@@ -469,6 +482,18 @@ public class OracleDialectTest {
         assertThat("Boolean", sut.convertFromDatabase("on", Boolean.class), is(Boolean.TRUE));
         assertThat("boolean", sut.convertFromDatabase("off", boolean.class), is(false));
         assertThat("null -> boolean", sut.convertFromDatabase(null, boolean.class), is(false));
+    }
+
+    /**
+     * DBから入力を変換するとき、
+     * コンバータが設定されていないと例外を送出する。
+     */
+    @Test
+    public void testConvertFromDatabaseNotFound() {
+        expectedException.expect(IllegalStateException.class);
+        expectedException.expectMessage("This dialect does not support [BigInteger] type.");
+
+        sut.convertFromDatabase("100", BigInteger.class);
     }
 }
 
