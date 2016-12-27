@@ -1,7 +1,6 @@
 package nablarch.core.db.connection;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.sameInstance;
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
@@ -164,4 +163,22 @@ public class DbConnectionContextTest {
         DbConnectionContext.getTransactionManagerConnection("connectionName");
     }
 
+    /**
+     * 接続の削除後に再度新しい接続をスレッドに割り当てられること。
+     * @throws Exception
+     */
+    @Test
+    public void testCloseAndReConnect() throws Exception {
+        DbConnectionContext.setConnection(mockCon1);
+        DbConnectionContext.removeConnection();
+        try {
+            DbConnectionContext.getConnection();
+            fail();
+        } catch (IllegalArgumentException ignored) {
+        }
+        
+        DbConnectionContext.setConnection(mockCon2);
+        assertThat(DbConnectionContext.getConnection(), is(sameInstance(mockCon2)));
+        DbConnectionContext.removeConnection();
+    }
 }
