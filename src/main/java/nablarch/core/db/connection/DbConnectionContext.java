@@ -23,7 +23,7 @@ public final class DbConnectionContext {
     }
 
     /** スレッドに紐付けたDB接続 */
-    private static ThreadLocal<Map<String, AppDbConnection>> connection =
+    private static final ThreadLocal<Map<String, AppDbConnection>> connection =
             new ThreadLocal<Map<String, AppDbConnection>>() {
                 @Override
                 protected Map<String, AppDbConnection> initialValue() {
@@ -127,6 +127,9 @@ public final class DbConnectionContext {
     public static void removeConnection(String connectionName) {
         Map<String, AppDbConnection> localMap = connection.get();
         localMap.remove(connectionName);
+        if (localMap.isEmpty()) {
+            connection.remove();
+        }
     }
 
     /**
