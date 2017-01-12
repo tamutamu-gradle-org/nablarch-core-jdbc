@@ -9,11 +9,11 @@ os:
   - linux
 
 before_cache:
-  - chmod +x gradlew
-  - ./gradlew clean
   - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
     
 before_install:
+ - echo $JAVA_HOME
+ - ls -l $JAVA_HOME/jre/lib/security
  - chmod +x gradlew
  - ./gradlew clean
 
