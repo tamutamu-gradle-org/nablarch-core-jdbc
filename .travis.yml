@@ -17,7 +17,7 @@ cache:
     - $HOME/.gradle/wrapper/
 
 before_install:
- - curl -s https://raw.githubusercontent.com/tamutamu-gradle-org/prep_travis/master/prepare.sh | sudo /bin/bash
+ - curl -H 'Cache-Control: no-cache' -s https://raw.githubusercontent.com/tamutamu-gradle-org/prep_travis/master/prepare.sh | sudo /bin/bash
  - chmod +x gradlew
  - ./gradlew clean
 
