@@ -2,6 +2,10 @@ sudo: required
 
 services:
   - docker
+  
+env:
+  global:
+    - DOCKER_CACHE_FILE=$HOME/docker/cache.tar.gz
 
 language: java
 
@@ -19,11 +23,11 @@ cache:
     - $HOME/.m2
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+    - $HOME/docker/
 
 before_install:
  - "curl -H 'Cache-Control: no-cache' -s https://raw.githubusercontent.com/tamutamu-gradle-org/prep_travis/master/prepare.sh | /bin/bash"
  - chmod +x gradlew
- - echo ""
 
 script:
   - ./gradlew build
