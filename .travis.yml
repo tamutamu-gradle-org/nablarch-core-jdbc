@@ -23,6 +23,7 @@ cache:
 before_install:
  - "curl -H 'Cache-Control: no-cache' -s https://raw.githubusercontent.com/tamutamu-gradle-org/prep_travis/master/prepare.sh | /bin/bash"
  - chmod +x gradlew
+ - echo ""
 
 script:
   - ./gradlew build
