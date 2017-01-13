@@ -22,4 +22,4 @@ before_install:
  - ls -l /home/travis/.m2/repository/com/nablarch/framework/nablarch-core-applog/
 
 script:
-  - ./gradlew build
+  - ./gradlew build -Dpass=$pass
