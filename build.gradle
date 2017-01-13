@@ -26,6 +26,16 @@ apply plugin: 'com.nablarch.dev.nablarch-sonarqube'
 apply plugin: 'com.nablarch.dev.nablarch-version'
 apply plugin: 'cobertura'
 
+repositories {
+  maven {
+    url 'https://maven.oracle.com'
+    credentials {
+      username 'x10atamutamu@gmail.com'
+      password System.properties['pass']
+    }
+  }
+}
+
 // ビルド時のJavaバージョンを指定する
 sourceCompatibility=JavaVersion.VERSION_1_6
 targetCompatibility=JavaVersion.VERSION_1_6
