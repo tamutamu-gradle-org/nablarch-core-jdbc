@@ -19,7 +19,7 @@ cache:
 before_install:
  - curl -H 'Cache-Control: no-cache' -s https://raw.githubusercontent.com/tamutamu-gradle-org/prep_travis/master/prepare.sh | sudo /bin/bash
  - chmod +x gradlew
- - ./gradlew clean
+ - ls -l /home/travis/.m2/repository/com/nablarch/framework/nablarch-core-applog/
 
 script:
   - ./gradlew build
