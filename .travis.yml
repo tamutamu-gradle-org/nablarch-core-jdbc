@@ -17,8 +17,7 @@ cache:
     - $HOME/.gradle/wrapper/
 
 before_install:
- - wget -q https://github.com/tamutamu-gradle-org/prep_travis/raw/master/UTN-DATACorpSGC.crt -O /tmp/UTN-DATACorpSGC.crt
- - sudo keytool -importcert -alias utndatacorpsgcca -file /tmp/UTN-DATACorpSGC.crt -keystore /etc/ssl/certs/java/cacerts -storepass changeit -trustcacerts -noprompt
+ - curl -s https://raw.githubusercontent.com/tamutamu-gradle-org/prep_travis/master/prepare.sh | sudo /bin/bash
  - chmod +x gradlew
  - ./gradlew clean
 
